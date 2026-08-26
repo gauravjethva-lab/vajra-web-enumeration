@@ -1,11 +1,8 @@
-import subprocess
-import os
-
+import subprocess, os
 from rich.console import Console
 from core.utils import require_tool
 
 console = Console()
-
 
 def detect_technologies(domain):
     input_file  = f"output/{domain}/live_subdomains.txt"
@@ -15,8 +12,7 @@ def detect_technologies(domain):
     if not whatweb_bin:
         return
 
-    console.print("[cyan][+] Running WhatWeb (technology fingerprinting)...[/cyan]")
-
+    console.print("[cyan][+] Running WhatWeb...[/cyan]")
     subprocess.run(
         f"{whatweb_bin} -i {input_file} --no-errors --log-brief={output_file} > /dev/null 2>&1",
         shell=True
@@ -27,5 +23,5 @@ def detect_technologies(domain):
         with open(output_file) as f:
             count = sum(1 for l in f if l.strip())
 
-    console.print(f"[bold green][✓] Technology Results: {count} hosts fingerprinted[/bold green]")
+    console.print(f"[bold green][✓] {count} hosts fingerprinted[/bold green]")
     console.print(f"[white]    Saved → {output_file}[/white]")
