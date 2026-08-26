@@ -6,6 +6,8 @@ console = Console()
 
 def clean_hosts(input_file, clean_file):
     hosts = set()
+    if not os.path.exists(input_file):
+        return 0
     with open(input_file) as f:
         for line in f:
             line = line.strip()
@@ -33,12 +35,19 @@ def scan_ports(domain):
 
     if naabu_bin:
         console.print("[cyan][+] Running Naabu (top 1000 ports)...[/cyan]")
-        subprocess.run(f"cat {clean_hosts_file} | {naabu_bin} -top-ports 1000 -silent -o {naabu_output} > /dev/null 2>&1", shell=True)
+        subprocess.run(
+            f"cat {clean_hosts_file} | {naabu_bin} -top-ports 1000 -silent -o {naabu_output} > /dev/null 2>&1",
+            shell=True, timeout=600
+        )
 
     if masscan_bin:
-        console.print("[cyan][+] Running Masscan (ports 1-65535)...[/cyan]")
+        console.print("[cyan][+] Running Masscan (common ports, rate 5000)...[/cyan]")
         sudo = "" if os.geteuid() == 0 else "sudo "
-        subprocess.run(f"{sudo}{masscan_bin} -p1-65535 --rate 500 -iL {clean_hosts_file} -oL {masscan_output} > /dev/null 2>&1", shell=True)
+        # Rate 5000 (10x faster), common ports only for speed
+        subprocess.run(
+            f"{sudo}{masscan_bin} -p21,22,23,25,53,80,110,143,443,445,3306,3389,5432,6379,8080,8443,8888,9200,27017 --rate 5000 -iL {clean_hosts_file} -oL {masscan_output} > /dev/null 2>&1",
+            shell=True, timeout=600
+        )
 
     combined = set()
     if os.path.exists(naabu_output):
