@@ -6,31 +6,27 @@ from rich import box
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 from rich.prompt import Prompt
 from rich.table import Table
-
-import random
-import time
-import os
+import random, time, os
 from urllib.parse import urlparse
 
-# Fixed ASCII art - using simple reliable characters
-VAJRA_ASCII = r"""
- __   __  ___     _______       ______     ___  
-|  | |  ||   \   |   __  \    |   _  \   |   | 
-|  |_|  ||    \  |  |__|  |   |  |_|  |  |   | 
-|       ||     \ |      _/    |      _/   |   | 
- \     / |  |\  ||  |\  \___  |  |\  \    |   | 
-  \___/  |__| \__||__| \_____|  |__| \__|  |___| 
-"""
+console = Console()
 
-VAJRA_ASCII_V2 = """
-██╗   ██╗ █████╗      ██╗██████╗  █████╗ 
-██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
-██║   ██║███████║     ██║██████╔╝███████║
-╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
- ╚████╔╝ ██║  ██║╚█████╔╝██████╔╝██║  ██║
-  ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝  ╚═╝
-"""
+VAJRA_ASCII = (
+    " __   __ _____    _  ____   ___ \n"
+    " \\ \\ / /|  _  |  | ||  _ \\ /   |\n"
+    "  \\ V / | |_| |  | || |_) | () |\n"
+    "   \\_/  |_____|  | ||____/  \\___|\n"
+    "                 |_|             \n"
+)
 
+VAJRA_LETTERS = [
+    "██╗   ██╗",
+    "██║   ██║",
+    "██║   ██║",
+    "╚██╗ ██╔╝",
+    " ╚████╔╝ ",
+    "  ╚═══╝  ",
+]
 
 def sanitize_domain(raw_target):
     target = raw_target.strip()
@@ -38,74 +34,65 @@ def sanitize_domain(raw_target):
         target = "http://" + target
     parsed = urlparse(target)
     host = parsed.netloc or parsed.path
-    host = host.strip("/").split("/")[0]
-    host = host.split(":")[0]   # remove port if any
-    host = host.rstrip(".")
+    host = host.strip("/").split("/")[0].split(":")[0].rstrip(".")
     return host
 
-
 def start_banner():
-    console = Console()
-
-    colors = [
-        "bright_cyan",
-        "bright_magenta",
-        "bright_green",
-        "bright_yellow",
-    ]
-    selected_color = random.choice(colors)
-
+    colors = ["bright_cyan", "bright_magenta", "bright_green", "bright_yellow"]
+    color = random.choice(colors)
     os.system("clear")
 
-    # Print ASCII line by line with animation
-    for line in VAJRA_ASCII_V2.splitlines():
-        console.print(line, style=f"bold {selected_color}", highlight=False)
-        time.sleep(0.04)
+    # Simple text-based banner that renders perfectly everywhere
+    banner_lines = [
+        "",
+        "  ██╗   ██╗ █████╗      ██╗██████╗  █████╗  ",
+        "  ██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗ ",
+        "  ██║   ██║███████║     ██║██████╔╝███████║  ",
+        "  ╚██╗ ██╔╝██╔══██║██╗ ██║██╔══██╗██╔══██║  ",
+        "   ╚████╔╝ ██║  ██║╚█████╔╝██║  ██║██║  ██║  ",
+        "    ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ",
+        "",
+    ]
 
-    # Subtitle text
+    for line in banner_lines:
+        console.print(line, style=f"bold {color}", highlight=False)
+        time.sleep(0.03)
+
     subtitle = Text()
     subtitle.append("⚡ Advanced Web Enumeration & Recon Framework ⚡\n", style="bold yellow")
-    subtitle.append("Subdomain • LiveCheck • Endpoints • Ports • Tech", style="bold white")
+    subtitle.append("Subdomain  •  LiveCheck  •  Endpoints  •  Ports  •  Tech", style="bold white")
 
-    panel = Panel(
+    console.print(Panel(
         Align.center(subtitle),
-        border_style=selected_color,
+        border_style=color,
         box=box.DOUBLE,
         padding=(1, 4),
         title="[bold orange1]⚡ VAJRA ⚡[/bold orange1]",
-        subtitle="[bold white]v1.0.0 | Kali Linux Ready[/bold white]",
-    )
-    console.print(panel)
+        subtitle="[bold white]v1.1.0 | Kali Linux Ready[/bold white]",
+    ))
 
-    # Info table
-    info_table = Table(box=box.SIMPLE, show_header=False, padding=(0, 2))
-    info_table.add_column(style="bold cyan")
-    info_table.add_column(style="white")
-    info_table.add_row("Author",  "Gaurav Jethva")
-    info_table.add_row("GitHub",  "github.com/gauravjethva-lab/vajra-web-enumeration")
-    info_table.add_row("Warning", "Use only on authorized targets!")
-    console.print(Align.center(info_table))
+    info = Table(box=box.SIMPLE, show_header=False, padding=(0, 2))
+    info.add_column(style="bold cyan")
+    info.add_column(style="white")
+    info.add_row("Author",  "Gaurav Jethva")
+    info.add_row("GitHub",  "github.com/gauravjethva-lab/vajra-web-enumeration")
+    info.add_row("⚠️  Warning", "Use only on authorized targets!")
+    console.print(Align.center(info))
     console.print()
 
-    # Get target
     raw_target = Prompt.ask("[bold cyan][?][/bold cyan] Enter Domain or URL")
     target = sanitize_domain(raw_target)
 
-    # Scan config panel
-    target_panel = Panel(
-        f"""
-[bold green]TARGET[/bold green]  : [bold white]{target}[/bold white]
-[bold yellow]MODE[/bold yellow]    : [bold white]Full Auto Recon Pipeline[/bold white]
-[bold cyan]MODULES[/bold cyan] : [bold white]Subdomains → Live → Endpoints → Ports → Tech[/bold white]
-[bold red]STATUS[/bold red]  : [bold white]Initializing...[/bold white]
-""",
+    console.print(Panel(
+        f"\n[bold green]TARGET[/bold green]  : [bold white]{target}[/bold white]\n"
+        f"[bold yellow]MODE[/bold yellow]    : [bold white]Full Auto Recon Pipeline[/bold white]\n"
+        f"[bold cyan]MODULES[/bold cyan] : [bold white]Subdomains → Live → Endpoints → Ports → Tech[/bold white]\n"
+        f"[bold red]STATUS[/bold red]  : [bold white]Initializing...[/bold white]\n",
         border_style="bright_cyan",
         title="[bold yellow]⚡ SCAN CONFIGURATION[/bold yellow]",
         box=box.ROUNDED,
-    )
-    console.print(target_panel)
+    ))
 
-    # Loading animation
     modules = [
         ("🔍", "Subdomain Engine"),
         ("🌐", "Live Host Checker"),
@@ -118,11 +105,11 @@ def start_banner():
     with Progress(
         SpinnerColumn(style="bright_cyan"),
         TextColumn("[progress.description]{task.description}"),
-        BarColumn(bar_width=20, style="cyan", complete_style="bright_green"),
+        BarColumn(bar_width=25, style="cyan", complete_style="bright_green"),
         console=console,
     ) as progress:
-        for icon, module in modules:
-            task = progress.add_task(f"[cyan]Loading {icon} {module}...", total=10)
+        for icon, name in modules:
+            task = progress.add_task(f"[cyan]Loading {icon} {name}...", total=10)
             for _ in range(10):
                 time.sleep(0.03)
                 progress.advance(task)
