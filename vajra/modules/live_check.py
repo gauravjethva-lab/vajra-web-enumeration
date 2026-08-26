@@ -1,18 +1,13 @@
-import subprocess
-import os
-
+import subprocess, os
 from rich.console import Console
 from core.utils import require_tool
 
 console = Console()
 
-
 def check_live_subdomains(domain):
     input_file  = f"output/{domain}/final_subdomains.txt"
     output_file = f"output/{domain}/live_subdomains.txt"
-
     console.print("[cyan][+] Running httpx to find live hosts...[/cyan]")
-
     httpx_bin = require_tool("httpx")
 
     if not httpx_bin:
@@ -21,20 +16,11 @@ def check_live_subdomains(domain):
         console.print("[yellow][!] httpx missing — using all subdomains as fallback.[/yellow]")
         return
 
-    command = (
-        f"cat {input_file} | "
-        f"{httpx_bin} "
-        f"-silent "
-        f"-threads 50 "
-        f"-timeout 10 "
-        f"-status-code "
-        f"-title "
-        f"-o {output_file} "
-        f"> /dev/null 2>&1"
+    subprocess.run(
+        f"cat {input_file} | {httpx_bin} -silent -threads 50 -timeout 10 -status-code -title -o {output_file} > /dev/null 2>&1",
+        shell=True
     )
-    subprocess.run(command, shell=True)
 
-    # Count results
     count = 0
     if os.path.exists(output_file):
         with open(output_file) as f:
