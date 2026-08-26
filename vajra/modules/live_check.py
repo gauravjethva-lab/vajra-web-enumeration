@@ -7,6 +7,7 @@ console = Console()
 def check_live_subdomains(domain):
     input_file  = f"output/{domain}/final_subdomains.txt"
     output_file = f"output/{domain}/live_subdomains.txt"
+
     console.print("[cyan][+] Running httpx to find live hosts...[/cyan]")
     httpx_bin = require_tool("httpx")
 
@@ -18,7 +19,7 @@ def check_live_subdomains(domain):
 
     subprocess.run(
         f"cat {input_file} | {httpx_bin} -silent -threads 50 -timeout 10 -status-code -title -o {output_file} > /dev/null 2>&1",
-        shell=True
+        shell=True, timeout=300
     )
 
     count = 0
