@@ -184,6 +184,7 @@ vajra/
 ## 👤 Author
 
 **Gaurav Jethva** — [@gauravjethva-lab](https://github.com/gauravjethva-lab)
+instagram :  gauravjethva_
 
 ---
 
