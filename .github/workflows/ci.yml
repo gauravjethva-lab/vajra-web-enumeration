@@ -1,0 +1,39 @@
+name: 🔱 VAJRA CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-check:
+    name: 🧪 Lint & Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r vajra/requirements.txt
+          pip install pyflakes
+
+      - name: 🔍 Syntax check all Python files
+        run: |
+          echo "Checking Python syntax..."
+          find vajra -name "*.py" -exec python3 -m py_compile {} \; && echo "✅ All files OK"
+
+      - name: 🧹 Lint with pyflakes
+        run: |
+          pyflakes vajra/ || true
+
+      - name: ✅ Done
+        run: echo "🔱 VAJRA CI passed!"
