@@ -1,7 +1,7 @@
 <div align="center">
 
 ```
-██╗   ██╗ █████╗      ██╗██████╗  █████╗
+██╗   ██╗ █████╗      ██╗██████╗  █████╗ 
 ██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
 ██║   ██║███████║     ██║██████╔╝███████║
 ╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
@@ -15,6 +15,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.1.0-orange?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/gauravjethva-lab/vajra-web-enumeration?style=for-the-badge)
 
@@ -24,7 +25,7 @@
 
 ## 🔱 What is VAJRA?
 
-**VAJRA** is a full auto-pipeline reconnaissance framework built for **Kali Linux**. It chains together the best open-source recon tools — subdomain enumeration, live host checking, endpoint collection, port scanning, and technology fingerprinting — into a **single automated workflow** with **self-healing dependency installation**.
+**VAJRA** is a full auto-pipeline reconnaissance framework built for **Kali Linux**. It chains together the best open-source recon tools into a **single automated workflow** with **self-healing dependency installation**.
 
 > Run one command. VAJRA does the rest.
 
@@ -32,14 +33,69 @@
 
 ## ✨ Features
 
-- 🔍 **Subdomain Enumeration** — powered by `subfinder` + `amass`
-- 🌐 **Live Host Detection** — via `httpx`
-- 🗺️ **Endpoint Collection** — using `katana`, `gau`, `waybackurls`
-- 🔌 **Port Scanning** — with `masscan` + `naabu`
+- 🔍 **Subdomain Enumeration** — powered by `subfinder` + `amass` (parallel threads)
+- 🌐 **Live Host Detection** — via `httpx` with status codes + page titles
+- 🗺️ **Endpoint Collection** — `katana` + `gau` + `waybackurls` with smart deduplication & static file filtering
+- 🔌 **Port Scanning** — `masscan` (full 1-65535) + `naabu` (top 1000), results merged
 - 🧠 **Technology Fingerprinting** — via `whatweb`
-- 🔧 **Self-Healing Install** — auto-installs missing tools on first run
-- 🩹 **Smart Domain Sanitization** — handles full URLs gracefully
-- ⚡ **Zero Manual Setup** — one script, everything works
+- 🔧 **Self-Healing Install** — auto-installs every missing tool on first run
+- 📊 **HTML Report Generator** — beautiful dark-theme scan report
+- 📋 **Markdown Summary** — clean recon summary in `.md` format
+- ⏱️ **Per-stage Timing** — see exactly how long each stage takes
+- 🎨 **Rich Terminal UI** — colored output, progress bars, summary table
+
+---
+
+## 🖥️ Terminal Preview
+
+```
+██╗   ██╗ █████╗      ██╗██████╗  █████╗
+██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
+██║   ██║███████║     ██║██████╔╝███████║
+╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
+ ╚████╔╝ ██║  ██║╚█████╔╝██████╔╝██║  ██║
+  ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝  ╚═╝
+
+╔══════════════════════════════════════════════════╗
+║       ⚡ Advanced Web Enumeration Framework ⚡   ║
+║    Subdomain • LiveCheck • Endpoints • Ports     ║
+╠══════════════════════════════════════════════════╣
+║  TARGET  : example.com                           ║
+║  MODE    : Full Auto Recon Pipeline              ║
+║  MODULES : Subdomains → Live → Endpoints →       ║
+║            Ports → Tech                          ║
+╚══════════════════════════════════════════════════╝
+
+──────────────────────────────────────────────────
+ 🔍 Stage [1/5] : Subdomain Enumeration
+──────────────────────────────────────────────────
+[+] Running Subfinder...
+[✓] Subfinder: 43 subdomains
+[+] Running Amass (passive)...
+[✓] Amass: 31 subdomains
+[✓] Total Unique Subdomains: 58
+
+──────────────────────────────────────────────────
+ 🌐 Stage [2/5] : Live Host Detection
+──────────────────────────────────────────────────
+[+] Running httpx (status + titles)...
+[✓] Live Hosts Found: 24
+
+... (and so on)
+
+╔══════════════════════════════════════╗
+║        ⚡ VAJRA Scan Summary         ║
+╠══════════════════╦════════╦══════════╣
+║ Stage            ║ Status ║ Time     ║
+╠══════════════════╬════════╬══════════╣
+║ 🔍 Subdomains    ║  ✅    ║  45.2s   ║
+║ 🌐 Live Hosts    ║  ✅    ║  12.1s   ║
+║ 🗺️  Endpoints    ║  ✅    ║  88.4s   ║
+║ 🔌 Ports         ║  ✅    ║  33.7s   ║
+║ 🧠 Tech          ║  ✅    ║  18.9s   ║
+╚══════════════════╩════════╩══════════╝
+✅ Recon Complete! Results → output/example.com/
+```
 
 ---
 
@@ -50,7 +106,7 @@
 git clone https://github.com/gauravjethva-lab/vajra-web-enumeration.git
 cd vajra-web-enumeration/vajra
 
-# 2. Run installer (handles everything)
+# 2. Run installer (handles everything automatically)
 bash install.sh
 
 # 3. Launch VAJRA
@@ -66,12 +122,26 @@ python3 main.py
 | # | Stage | Tool(s) | Output File |
 |---|-------|---------|-------------|
 | 1 | 🔍 Subdomain Enumeration | `subfinder`, `amass` | `output/<domain>/final_subdomains.txt` |
-| 2 | 🌐 Live Host Check | `httpx` | `output/<domain>/live_subdomains.txt` |
+| 2 | 🌐 Live Host Check | `httpx` (status + title) | `output/<domain>/live_subdomains.txt` |
 | 3 | 🗺️ Endpoint Collection | `katana`, `gau`, `waybackurls` | `output/<domain>/all_endpoints.txt` |
-| 4 | 🔌 Port Scanning | `masscan`, `naabu` | `output/<domain>/open_ports.txt` |
+| 4 | 🔌 Port Scanning | `masscan` (1-65535), `naabu` (top 1000) | `output/<domain>/open_ports.txt` |
 | 5 | 🧠 Tech Fingerprinting | `whatweb` | `output/<domain>/technologies.txt` |
 
-All results are saved in `output/<domain>/` directory.
+All results saved in `output/<domain>/` directory.
+
+---
+
+## 📈 Generate Reports
+
+After a scan, generate a professional report:
+
+```bash
+# HTML Report (dark themed, opens in browser)
+python3 report_generator.py example.com
+
+# Markdown Summary
+python3 recon_summary.py example.com
+```
 
 ---
 
@@ -79,29 +149,30 @@ All results are saved in `output/<domain>/` directory.
 
 ```
 vajra/
-├── main.py                  # Entry point — runs the full pipeline
-├── install.sh               # Dependency installer
-├── requirements.txt         # Python dependencies
-├── README.md
+├── main.py                   # Entry point — full pipeline + summary table
+├── install.sh                # One-click dependency installer
+├── requirements.txt          # Python dependencies (rich, pyfiglet)
+├── report_generator.py       # HTML scan report generator
+├── recon_summary.py          # Markdown recon summary generator
 ├── modules/
-│   ├── subdomains.py        # Subdomain enumeration
-│   ├── live_check.py        # Live host checker
-│   ├── endpoints.py         # Endpoint collection
-│   ├── ports.py             # Port scanner
-│   └── tech_detect.py       # Technology fingerprinter
+│   ├── subdomains.py         # Subfinder + Amass (parallel threads)
+│   ├── live_check.py         # httpx with status + title
+│   ├── endpoints.py          # Katana + GAU + Wayback + dedup + filter
+│   ├── ports.py              # Masscan (1-65535) + Naabu merged
+│   └── tech_detect.py        # WhatWeb fingerprinting
 └── core/
-    ├── banner.py            # ASCII banner & UI
-    ├── utils.py             # Shared utilities
-    └── setup_check.py       # Tool availability checker
+    ├── banner.py             # Rich UI, ASCII banner, loading animation
+    ├── utils.py              # Tool path resolver
+    └── setup_check.py        # Auto dependency installer
 ```
 
 ---
 
 ## ⚙️ Requirements
 
-- **OS:** Kali Linux (recommended) / any Debian-based Linux
+- **OS:** Kali Linux (recommended) / Debian-based Linux
 - **Python:** 3.8+
-- **Permissions:** `sudo` access (required for `masscan`)
+- **Permissions:** `sudo` access (required for `masscan` raw sockets)
 
 ### Python Dependencies
 ```
@@ -109,19 +180,29 @@ rich>=13.0.0
 pyfiglet>=1.0.0
 ```
 
-### External Tools (Auto-installed by VAJRA)
+### External Tools (Auto-installed)
 `subfinder` • `amass` • `httpx` • `naabu` • `masscan` • `whatweb` • `katana` • `gau` • `waybackurls`
 
 ---
 
-## 🛠️ Changelog & Improvements
+## 🛠️ Changelog
 
+### v1.1.0 — Bug Fix Release
 | Fix | Description |
 |-----|-------------|
-| 🩹 Domain Sanitization | Full URLs like `https://example.com/path` are cleaned to hostname only |
-| 🔗 Endpoint Pipeline | Endpoint collection was built but not wired — now fully integrated |
-| 🔐 Masscan sudo | Auto-prefixes `sudo` when not running as root |
-| 🛡️ Graceful Fallback | Each module checks for its tool before running — no silent failures |
+| 🎨 Banner Fix | "VAJBA" ASCII rendering bug fixed — now correctly shows "VAJRA" |
+| 🌐 httpx | Now shows status codes + page titles for live hosts |
+| 🗺️ Endpoints | Static file filtering (.png, .css, .woff etc.) + deduplication |
+| 🔌 Masscan | Port range expanded from 1-1000 to full 1-65535 |
+| 🔌 Ports | Better host:port parsing from masscan output |
+| 🧠 WhatWeb | Fixed `--log-brief` flag syntax |
+| ⏱️ Timing | Per-stage timing shown in final summary table |
+| 📊 Summary | Beautiful rich summary table after scan completes |
+
+### v1.0.0 — Initial Release
+- Full auto-pipeline: Subdomains → Live → Endpoints → Ports → Tech
+- Self-healing dependency installer
+- HTML + Markdown report generators
 
 ---
 
@@ -142,8 +223,8 @@ pyfiglet>=1.0.0
 
 <div align="center">
 
-**⚡ Built for the community. Use responsibly. ⚡**
+**⚡ Built for the security community. Use responsibly. ⚡**
 
-*If you find VAJRA useful, consider giving it a ⭐ on GitHub!*
+*If VAJRA helps you, give it a ⭐ on GitHub!*
 
 </div>
