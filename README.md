@@ -1,16 +1,6 @@
 <div align="center">
 
-<pre>
-██╗   ██╗ █████╗      ██╗██████╗  █████╗ 
-██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
-██║   ██║███████║     ██║██████╔╝███████║
-╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
- ╚████╔╝ ██║  ██║╚█████╔╝██████╔╝██║  ██║
-  ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝  ╚═╝
-</pre>
-
-### ⚡ VAJRA — Web Enumeration Framework ⚡
-### ॐ  Automated Recon. Zero Setup. Full Pipeline.  ॐ
+![VAJRA Banner](assets/banner.svg)
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)
@@ -49,8 +39,7 @@
 ## 🖥️ Terminal Preview
 
 ```
- ──────────────────────────────────────────────────
-  Stage [1/5] : Subdomain Enumeration
+ Stage [1/5] : Subdomain Enumeration
  ──────────────────────────────────────────────────
  [+] Running Subfinder...
  [✓] Subfinder: 43 subdomains
@@ -58,25 +47,22 @@
  [✓] Amass: 31 subdomains
  [✓] Total Unique Subdomains: 58
 
-  Stage [2/5] : Live Host Detection
+ Stage [2/5] : Live Host Detection
  ──────────────────────────────────────────────────
  [+] Running httpx (status + titles)...
  [✓] Live Hosts Found: 24
 
-  Stage [3/5] : Endpoint Collection
+ Stage [3/5] : Endpoint Collection
  ──────────────────────────────────────────────────
- [+] Running Katana (active crawl)...
- [+] Running GAU (passive URLs)...
- [+] Running Waybackurls...
+ [+] Running Katana, GAU, Waybackurls...
  [✓] Unique Useful Endpoints: 1342
 
-  Stage [4/5] : Port Scanning
+ Stage [4/5] : Port Scanning
  ──────────────────────────────────────────────────
- [+] Running Naabu (top 1000 ports)...
- [+] Running Masscan (ports 1-65535)...
+ [+] Running Naabu + Masscan (1-65535)...
  [✓] Open Ports Found: 38
 
-  Stage [5/5] : Technology Fingerprinting
+ Stage [5/5] : Technology Fingerprinting
  ──────────────────────────────────────────────────
  [+] Running WhatWeb...
  [✓] 24 hosts fingerprinted
@@ -123,16 +109,12 @@ python3 main.py
 | 4 | 🔌 Port Scanning | `masscan` (1-65535), `naabu` (top 1000) | `output/<domain>/open_ports.txt` |
 | 5 | 🧠 Tech Fingerprinting | `whatweb` | `output/<domain>/technologies.txt` |
 
-All results saved in `output/<domain>/` directory.
-
 ---
 
 ## 📈 Generate Reports
 
-After a scan, generate a professional report:
-
 ```bash
-# HTML Report (dark themed, opens in browser)
+# HTML Report (dark themed)
 python3 report_generator.py example.com
 
 # Markdown Summary
@@ -147,7 +129,7 @@ python3 recon_summary.py example.com
 vajra/
 ├── main.py                   # Entry point — full pipeline + summary table
 ├── install.sh                # One-click dependency installer
-├── requirements.txt          # Python dependencies (rich, pyfiglet)
+├── requirements.txt          # Python dependencies
 ├── report_generator.py       # HTML scan report generator
 ├── recon_summary.py          # Markdown recon summary generator
 ├── modules/
@@ -168,13 +150,7 @@ vajra/
 
 - **OS:** Kali Linux (recommended) / Debian-based Linux
 - **Python:** 3.8+
-- **Permissions:** `sudo` access (required for `masscan` raw sockets)
-
-### Python Dependencies
-```
-rich>=13.0.0
-pyfiglet>=1.0.0
-```
+- **Permissions:** `sudo` access (required for `masscan`)
 
 ### External Tools (Auto-installed)
 `subfinder` • `amass` • `httpx` • `naabu` • `masscan` • `whatweb` • `katana` • `gau` • `waybackurls`
@@ -186,34 +162,28 @@ pyfiglet>=1.0.0
 ### v1.1.0 — Bug Fix Release
 | Fix | Description |
 |-----|-------------|
-| 🎨 Banner Fix | ASCII art rendering bug fixed — now correctly shows VAJRA |
-| 🌐 httpx | Now shows status codes + page titles for live hosts |
-| 🗺️ Endpoints | Static file filtering (.png, .css, .woff etc.) + deduplication |
-| 🔌 Masscan | Port range expanded from 1-1000 to full 1-65535 |
-| 🔌 Ports | Better host:port parsing from masscan output |
-| 🧠 WhatWeb | Fixed log-brief flag syntax |
-| ⏱️ Timing | Per-stage timing shown in final summary table |
-| 📊 Summary | Rich summary table after scan completes |
+| 🎨 Banner Fix | ASCII art rendering fixed |
+| 🌐 httpx | Status codes + page titles for live hosts |
+| 🗺️ Endpoints | Static file filtering + deduplication |
+| 🔌 Masscan | Port range expanded to full 1-65535 |
+| ⏱️ Timing | Per-stage timing in final summary table |
 
 ### v1.0.0 — Initial Release
-- Full auto-pipeline: Subdomains → Live → Endpoints → Ports → Tech
-- Self-healing dependency installer
-- HTML + Markdown report generators
+- Full auto-pipeline, self-healing installer, HTML + Markdown reports
 
 ---
 
 ## ⚠️ Legal Disclaimer
 
-> **VAJRA is intended for authorized security testing only.**
-> Only use VAJRA against domains and systems you **own** or have **explicit written permission** to test.
-> Unauthorized use is illegal and unethical. The author is not responsible for any misuse.
+> **VAJRA is for authorized security testing only.**
+> Only use on systems you own or have explicit permission to test.
+> The author is not responsible for any misuse.
 
 ---
 
 ## 👤 Author
 
-**Gaurav Jethva**
-- GitHub: [@gauravjethva-lab](https://github.com/gauravjethva-lab)
+**Gaurav Jethva** — [@gauravjethva-lab](https://github.com/gauravjethva-lab)
 
 ---
 
