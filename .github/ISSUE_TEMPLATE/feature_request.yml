@@ -1,0 +1,43 @@
+name: 💡 Feature Request
+description: Suggest a new feature or improvement for VAJRA
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea to make VAJRA better? We'd love to hear it!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🤔 Problem / Motivation
+      description: What problem does this feature solve?
+      placeholder: I always find it frustrating when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: What would you like to see?
+      placeholder: It would be great if VAJRA could...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: Any other approaches you've thought of?
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Checklist
+      options:
+        - label: I have searched existing issues/PRs
+          required: true
+        - label: This feature is for ethical/legal use only
+          required: true
