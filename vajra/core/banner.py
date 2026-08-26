@@ -3,57 +3,48 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.align import Align
 from rich import box
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 from rich.prompt import Prompt
+from rich.table import Table
 
 import random
 import time
 import os
 from urllib.parse import urlparse
 
-
+# Fixed ASCII art - using simple reliable characters
 VAJRA_ASCII = r"""
-██╗   ██╗ █████╗      ██╗██████╗  █████╗
+ __   __  ___     _______       ______     ___  
+|  | |  ||   \   |   __  \    |   _  \   |   | 
+|  |_|  ||    \  |  |__|  |   |  |_|  |  |   | 
+|       ||     \ |      _/    |      _/   |   | 
+ \     / |  |\  ||  |\  \___  |  |\  \    |   | 
+  \___/  |__| \__||__| \_____|  |__| \__|  |___| 
+"""
+
+VAJRA_ASCII_V2 = """
+██╗   ██╗ █████╗      ██╗██████╗  █████╗ 
 ██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
 ██║   ██║███████║     ██║██████╔╝███████║
 ╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
  ╚████╔╝ ██║  ██║╚█████╔╝██████╔╝██║  ██║
   ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝  ╚═╝
-        ⚡ WEB ENUMERATION FRAMEWORK ⚡
-             ॐ  VAJRA  ॐ
 """
 
 
 def sanitize_domain(raw_target):
-    """
-    User agar 'https://www.example.com/path' jaisa kuch bhi de,
-    isse saaf karke sirf 'www.example.com' (netloc) nikaal deta hai.
-    Agar plain 'example.com' diya to wahi wapas milega.
-
-    Ye function is liye add kiya gaya hai kyunki purane version mein
-    raw input seedha folder path mein use ho raha tha, jisse
-    'output/https:/www.example.com/' jaise broken nested folders
-    ban rahe the.
-    """
-
     target = raw_target.strip()
-
     if "://" not in target:
         target = "http://" + target
-
     parsed = urlparse(target)
-
     host = parsed.netloc or parsed.path
-
     host = host.strip("/").split("/")[0]
-
+    host = host.split(":")[0]   # remove port if any
     host = host.rstrip(".")
-
     return host
 
 
 def start_banner():
-
     console = Console()
 
     colors = [
@@ -62,93 +53,80 @@ def start_banner():
         "bright_green",
         "bright_yellow",
     ]
-
     selected_color = random.choice(colors)
 
     os.system("clear")
 
-    for line in VAJRA_ASCII.splitlines():
-        console.print(
-            line,
-            style=f"bold {selected_color}"
-        )
-        time.sleep(0.02)
+    # Print ASCII line by line with animation
+    for line in VAJRA_ASCII_V2.splitlines():
+        console.print(line, style=f"bold {selected_color}", highlight=False)
+        time.sleep(0.04)
 
+    # Subtitle text
     subtitle = Text()
-
-    subtitle.append(
-        "⚡ Advanced Recon Automation Framework ⚡\n",
-        style="bold yellow"
-    )
-
-    subtitle.append(
-        "Auto-installs missing tools • Kali Linux Ready",
-        style="bold white"
-    )
+    subtitle.append("⚡ Advanced Web Enumeration & Recon Framework ⚡\n", style="bold yellow")
+    subtitle.append("Subdomain • LiveCheck • Endpoints • Ports • Tech", style="bold white")
 
     panel = Panel(
         Align.center(subtitle),
         border_style=selected_color,
         box=box.DOUBLE,
         padding=(1, 4),
-        title="[bold orange1]VAJRA[/bold orange1]",
-        subtitle="[bold white]Web Enumeration Framework[/bold white]",
+        title="[bold orange1]⚡ VAJRA ⚡[/bold orange1]",
+        subtitle="[bold white]v1.0.0 | Kali Linux Ready[/bold white]",
     )
-
     console.print(panel)
 
-    raw_target = Prompt.ask(
-        "\n[bold cyan][?][/bold cyan] Enter Domain or URL"
-    )
+    # Info table
+    info_table = Table(box=box.SIMPLE, show_header=False, padding=(0, 2))
+    info_table.add_column(style="bold cyan")
+    info_table.add_column(style="white")
+    info_table.add_row("Author",  "Gaurav Jethva")
+    info_table.add_row("GitHub",  "github.com/gauravjethva-lab/vajra-web-enumeration")
+    info_table.add_row("Warning", "Use only on authorized targets!")
+    console.print(Align.center(info_table))
+    console.print()
 
+    # Get target
+    raw_target = Prompt.ask("[bold cyan][?][/bold cyan] Enter Domain or URL")
     target = sanitize_domain(raw_target)
 
+    # Scan config panel
     target_panel = Panel(
         f"""
-[bold green]TARGET[/bold green] : {target}
-
-[bold yellow]MODE[/bold yellow] : Full Recon
-
-[bold cyan]STATUS[/bold cyan] : Initializing
+[bold green]TARGET[/bold green]  : [bold white]{target}[/bold white]
+[bold yellow]MODE[/bold yellow]    : [bold white]Full Auto Recon Pipeline[/bold white]
+[bold cyan]MODULES[/bold cyan] : [bold white]Subdomains → Live → Endpoints → Ports → Tech[/bold white]
+[bold red]STATUS[/bold red]  : [bold white]Initializing...[/bold white]
 """,
         border_style="bright_cyan",
-        title="[bold yellow]SCAN CONFIGURATION[/bold yellow]",
+        title="[bold yellow]⚡ SCAN CONFIGURATION[/bold yellow]",
         box=box.ROUNDED,
     )
-
     console.print(target_panel)
 
+    # Loading animation
     modules = [
-        "Loading Subdomain Engine",
-        "Loading Alive Checker",
-        "Loading Endpoint Collector",
-        "Loading Port Scanner",
-        "Loading Tech Fingerprinter",
+        ("🔍", "Subdomain Engine"),
+        ("🌐", "Live Host Checker"),
+        ("🗺️ ", "Endpoint Collector"),
+        ("🔌", "Port Scanner"),
+        ("🧠", "Tech Fingerprinter"),
     ]
 
     console.print()
-
     with Progress(
         SpinnerColumn(style="bright_cyan"),
-        TextColumn(
-            "[progress.description]{task.description}"
-        ),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(bar_width=20, style="cyan", complete_style="bright_green"),
         console=console,
     ) as progress:
-
-        for module in modules:
-
-            task = progress.add_task(
-                f"[cyan]{module}...",
-                total=None
-            )
-
-            time.sleep(0.4)
-
+        for icon, module in modules:
+            task = progress.add_task(f"[cyan]Loading {icon} {module}...", total=10)
+            for _ in range(10):
+                time.sleep(0.03)
+                progress.advance(task)
             progress.remove_task(task)
 
-    console.print(
-        "\n[bold bright_green][✓][/bold bright_green] All modules loaded successfully!\n"
-    )
-
+    console.print("\n[bold bright_green][✓] All modules loaded! Starting scan...[/bold bright_green]\n")
     return target
