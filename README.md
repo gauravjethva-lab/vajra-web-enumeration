@@ -1,13 +1,13 @@
 <div align="center">
 
-```
+<pre>
 ██╗   ██╗ █████╗      ██╗██████╗  █████╗ 
 ██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
 ██║   ██║███████║     ██║██████╔╝███████║
 ╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
  ╚████╔╝ ██║  ██║╚█████╔╝██████╔╝██║  ██║
   ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝  ╚═╝
-```
+</pre>
 
 ### ⚡ VAJRA — Web Enumeration Framework ⚡
 ### ॐ  Automated Recon. Zero Setup. Full Pipeline.  ॐ
@@ -49,52 +49,48 @@
 ## 🖥️ Terminal Preview
 
 ```
-██╗   ██╗ █████╗      ██╗██████╗  █████╗
-██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
-██║   ██║███████║     ██║██████╔╝███████║
-╚██╗ ██╔╝██╔══██║██   ██║██╔══██╗██╔══██║
- ╚████╔╝ ██║  ██║╚█████╔╝██████╔╝██║  ██║
-  ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═════╝ ╚═╝  ╚═╝
+ ──────────────────────────────────────────────────
+  Stage [1/5] : Subdomain Enumeration
+ ──────────────────────────────────────────────────
+ [+] Running Subfinder...
+ [✓] Subfinder: 43 subdomains
+ [+] Running Amass (passive)...
+ [✓] Amass: 31 subdomains
+ [✓] Total Unique Subdomains: 58
 
-╔══════════════════════════════════════════════════╗
-║       ⚡ Advanced Web Enumeration Framework ⚡   ║
-║    Subdomain • LiveCheck • Endpoints • Ports     ║
-╠══════════════════════════════════════════════════╣
-║  TARGET  : example.com                           ║
-║  MODE    : Full Auto Recon Pipeline              ║
-║  MODULES : Subdomains → Live → Endpoints →       ║
-║            Ports → Tech                          ║
-╚══════════════════════════════════════════════════╝
+  Stage [2/5] : Live Host Detection
+ ──────────────────────────────────────────────────
+ [+] Running httpx (status + titles)...
+ [✓] Live Hosts Found: 24
 
-──────────────────────────────────────────────────
- 🔍 Stage [1/5] : Subdomain Enumeration
-──────────────────────────────────────────────────
-[+] Running Subfinder...
-[✓] Subfinder: 43 subdomains
-[+] Running Amass (passive)...
-[✓] Amass: 31 subdomains
-[✓] Total Unique Subdomains: 58
+  Stage [3/5] : Endpoint Collection
+ ──────────────────────────────────────────────────
+ [+] Running Katana (active crawl)...
+ [+] Running GAU (passive URLs)...
+ [+] Running Waybackurls...
+ [✓] Unique Useful Endpoints: 1342
 
-──────────────────────────────────────────────────
- 🌐 Stage [2/5] : Live Host Detection
-──────────────────────────────────────────────────
-[+] Running httpx (status + titles)...
-[✓] Live Hosts Found: 24
+  Stage [4/5] : Port Scanning
+ ──────────────────────────────────────────────────
+ [+] Running Naabu (top 1000 ports)...
+ [+] Running Masscan (ports 1-65535)...
+ [✓] Open Ports Found: 38
 
-... (and so on)
+  Stage [5/5] : Technology Fingerprinting
+ ──────────────────────────────────────────────────
+ [+] Running WhatWeb...
+ [✓] 24 hosts fingerprinted
 
-╔══════════════════════════════════════╗
-║        ⚡ VAJRA Scan Summary         ║
-╠══════════════════╦════════╦══════════╣
-║ Stage            ║ Status ║ Time     ║
-╠══════════════════╬════════╬══════════╣
-║ 🔍 Subdomains    ║  ✅    ║  45.2s   ║
-║ 🌐 Live Hosts    ║  ✅    ║  12.1s   ║
-║ 🗺️  Endpoints    ║  ✅    ║  88.4s   ║
-║ 🔌 Ports         ║  ✅    ║  33.7s   ║
-║ 🧠 Tech          ║  ✅    ║  18.9s   ║
-╚══════════════════╩════════╩══════════╝
-✅ Recon Complete! Results → output/example.com/
+ +-----------------------+--------+---------+
+ | Stage                 | Status |    Time |
+ +-----------------------+--------+---------+
+ | Subdomain Enumeration |   Done |  45.2s  |
+ | Live Host Check       |   Done |  12.1s  |
+ | Endpoint Collection   |   Done |  88.4s  |
+ | Port Scanning         |   Done |  33.7s  |
+ | Tech Fingerprinting   |   Done |  18.9s  |
+ +-----------------------+--------+---------+
+ Results saved in: output/example.com/
 ```
 
 ---
@@ -190,14 +186,14 @@ pyfiglet>=1.0.0
 ### v1.1.0 — Bug Fix Release
 | Fix | Description |
 |-----|-------------|
-| 🎨 Banner Fix | "VAJBA" ASCII rendering bug fixed — now correctly shows "VAJRA" |
+| 🎨 Banner Fix | ASCII art rendering bug fixed — now correctly shows VAJRA |
 | 🌐 httpx | Now shows status codes + page titles for live hosts |
 | 🗺️ Endpoints | Static file filtering (.png, .css, .woff etc.) + deduplication |
 | 🔌 Masscan | Port range expanded from 1-1000 to full 1-65535 |
 | 🔌 Ports | Better host:port parsing from masscan output |
-| 🧠 WhatWeb | Fixed `--log-brief` flag syntax |
+| 🧠 WhatWeb | Fixed log-brief flag syntax |
 | ⏱️ Timing | Per-stage timing shown in final summary table |
-| 📊 Summary | Beautiful rich summary table after scan completes |
+| 📊 Summary | Rich summary table after scan completes |
 
 ### v1.0.0 — Initial Release
 - Full auto-pipeline: Subdomains → Live → Endpoints → Ports → Tech
