@@ -1,121 +1,78 @@
 import subprocess
 import os
+from urllib.parse import urlparse
 
+from rich.console import Console
 from core.utils import require_tool
+
+console = Console()
+
+# Extensions to filter out (static files, not useful for recon)
+SKIP_EXTENSIONS = {
+    ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico",
+    ".css", ".woff", ".woff2", ".ttf", ".eot",
+    ".mp4", ".mp3", ".avi", ".pdf", ".zip",
+}
+
+
+def is_useful_url(url):
+    try:
+        path = urlparse(url).path.lower()
+        ext = os.path.splitext(path)[1]
+        return ext not in SKIP_EXTENSIONS
+    except:
+        return True
 
 
 def collect_endpoints(domain):
-
-    input_file = f"output/{domain}/live_subdomains.txt"
-
+    input_file    = f"output/{domain}/live_subdomains.txt"
     katana_output = f"output/{domain}/katana.txt"
+    gau_output    = f"output/{domain}/gau.txt"
+    wayback_output= f"output/{domain}/wayback.txt"
+    final_output  = f"output/{domain}/all_endpoints.txt"
 
-    gau_output = f"output/{domain}/gau.txt"
-
-    wayback_output = f"output/{domain}/wayback.txt"
-
-    final_output = f"output/{domain}/all_endpoints.txt"
-
-    print("\n[+] Starting Endpoint Collection...")
-
-    # =========================================================
-    # KATANA
-    # =========================================================
-
+    # ── Katana ──────────────────────────────────────────────
     katana_bin = require_tool("katana")
-
     if katana_bin:
-
-        print("[+] Running Katana...")
-
-        katana_command = (
-            f"cat {input_file} | "
-            f"{katana_bin} "
-            f"-silent "
-            f"-jc "
-            f"-kf all "
-            f"-d 3 "
-            f"-o {katana_output} "
-            f"> /dev/null 2>&1"
+        console.print("[cyan][+] Running Katana (active crawl)...[/cyan]")
+        subprocess.run(
+            f"cat {input_file} | {katana_bin} -silent -jc -kf all -d 3 -o {katana_output} > /dev/null 2>&1",
+            shell=True
         )
 
-        subprocess.run(katana_command, shell=True)
-
-    # =========================================================
-    # GAU
-    # =========================================================
-
+    # ── GAU ─────────────────────────────────────────────────
     gau_bin = require_tool("gau")
-
     if gau_bin:
-
-        print("[+] Running gau...")
-
-        gau_command = (
-            f"cat {input_file} | "
-            f"{gau_bin} "
-            f"--threads 10 "
-            f"> {gau_output} 2>/dev/null"
+        console.print("[cyan][+] Running GAU (passive URLs)...[/cyan]")
+        subprocess.run(
+            f"echo {domain} | {gau_bin} --threads 10 > {gau_output} 2>/dev/null",
+            shell=True
         )
 
-        subprocess.run(gau_command, shell=True)
-
-    # =========================================================
-    # WAYBACKURLS
-    # =========================================================
-
+    # ── Waybackurls ─────────────────────────────────────────
     wayback_bin = require_tool("waybackurls")
-
     if wayback_bin:
-
-        print("[+] Running waybackurls...")
-
-        wayback_command = (
-            f"cat {input_file} | "
-            f"{wayback_bin} "
-            f"> {wayback_output} 2>/dev/null"
+        console.print("[cyan][+] Running Waybackurls...[/cyan]")
+        subprocess.run(
+            f"echo {domain} | {wayback_bin} > {wayback_output} 2>/dev/null",
+            shell=True
         )
 
-        subprocess.run(wayback_command, shell=True)
-
-    # =========================================================
-    # MERGE RESULTS
-    # =========================================================
-
-    print("[+] Merging Endpoints...")
+    # ── Merge + Deduplicate + Filter ────────────────────────
+    console.print("[cyan][+] Merging and deduplicating endpoints...[/cyan]")
 
     all_urls = set()
+    for fp in [katana_output, gau_output, wayback_output]:
+        if os.path.exists(fp):
+            with open(fp) as f:
+                for line in f:
+                    url = line.strip()
+                    if url and is_useful_url(url):
+                        all_urls.add(url)
 
-    files = [
-        katana_output,
-        gau_output,
-        wayback_output
-    ]
-
-    for file_path in files:
-
-        if os.path.exists(file_path):
-
-            with open(file_path, "r") as file:
-
-                for line in file:
-
-                    line = line.strip()
-
-                    if line:
-                        all_urls.add(line)
-
-    with open(final_output, "w") as file:
-
+    with open(final_output, "w") as f:
         for url in sorted(all_urls):
-            file.write(url + "\n")
+            f.write(url + "\n")
 
-    print(
-        f"[+] Endpoints saved to {final_output}"
-    )
-
-    print(
-        f"[+] Total Unique Endpoints: {len(all_urls)}"
-    )
-
-    print("\n[+] Endpoint Collection Completed!")
+    console.print(f"[bold green][✓] Unique Useful Endpoints: {len(all_urls)}[/bold green]")
+    console.print(f"[white]    Saved → {final_output}[/white]")
