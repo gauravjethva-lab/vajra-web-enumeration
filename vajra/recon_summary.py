@@ -1,7 +1,6 @@
 """
 VAJRA - Markdown Recon Summary Generator
 Usage: python3 recon_summary.py <domain>
-Auto-called by main.py after scan completes.
 """
 
 import os, sys, datetime
@@ -10,7 +9,9 @@ import os, sys, datetime
 def read_file(path, limit=None):
     try:
         with open(path) as f:
-            lines = [l.strip() for l in f if l.strip()]
+            lines = [l.strip() for l in f if l.strip()
+                     and not l.strip().startswith("=")
+                     and not l.strip().startswith("WHOIS —")]
         return lines[:limit] if limit else lines
     except:
         return []
@@ -35,7 +36,7 @@ def generate_summary(domain):
         for item in items[:limit]:
             out += f"- `{item}`\n"
         if len(items) > limit:
-            out += f"\n> ... and {len(items) - limit} more — see output file.\n"
+            out += f"\n> ... and {len(items) - limit} more\n"
         return out + "\n"
 
     md = f"""# VAJRA Recon Summary
@@ -70,7 +71,6 @@ def generate_summary(domain):
     out_path = f"{base}/recon_summary.md"
     with open(out_path, "w") as f:
         f.write(md)
-
     print(f"\n[+] Markdown summary saved: {out_path}")
 
 
