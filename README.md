@@ -5,9 +5,8 @@
 ![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Version](https://img.shields.io/badge/Version-2.0.0-orange?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.2.0-orange?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
-![Stages](https://img.shields.io/badge/Stages-12-purple?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/gauravjethva-lab/vajra-web-enumeration?style=for-the-badge)
 
 </div>
@@ -16,119 +15,63 @@
 
 ## 🔱 What is VAJRA?
 
-**VAJRA** is a full auto-pipeline web enumeration & reconnaissance framework built for **Kali Linux**. It chains together the best open-source security tools into a **12-stage automated workflow** — from passive recon all the way to screenshots and secret detection — with **self-healing dependency installation**.
+**VAJRA** is a full auto-pipeline web enumeration & reconnaissance framework built for **Kali Linux**. It chains together the best open-source recon tools into a **5-stage automated workflow** with **self-healing dependency installation** — and auto-generates a **professional HTML report** when the scan is done.
 
-> Run one command. VAJRA does the rest.
+> Run one command. VAJRA scans. VAJRA reports.
 
 ---
 
 ## ✨ Features
 
-- 🌍 **Passive Recon** — WHOIS, ASN lookup, IP resolution, Reverse DNS
-- 🔎 **DNS Reconnaissance** — A, MX, TXT, NS, CNAME, SOA records via `dnsx` + `dig`
-- 🔍 **Subdomain Enumeration** — `subfinder` + `amass` running in **parallel threads**
-- 🌐 **Live Host Detection** — `httpx` with status codes + page titles
-- 🛡️ **WAF Detection** — fingerprint Web Application Firewalls via `wafw00f`
-- 🗺️ **Endpoint Collection** — `katana` + `gau` + `waybackurls` running in **parallel** with smart deduplication
-- 📜 **JS File Analysis** — scan JS files for API keys, tokens, secrets, and hidden endpoints
-- ⚡ **CORS Check** — detect CORS misconfigurations (wildcard, credential leak)
-- 🔌 **Port Scanning** — `masscan` (rate 5000) + `naabu` (top 1000), results merged
-- 🧠 **Technology Fingerprinting** — via `whatweb`
-- 📂 **Directory Bruteforce** — `ffuf` with seclists wordlist on top hosts
-- 📸 **Screenshots** — auto-capture screenshots of all live hosts via `gowitness`
+- 🔍 **Subdomain Enumeration** — `subfinder` + `amass` running in parallel threads
+- 🌐 **Live Host Detection** — `httpx` with timeout protection
+- 🗺️ **Endpoint Collection** — `katana` + `gau` + `waybackurls` with timeout handling
+- 🔌 **Port Scanning** — `masscan` + `naabu` with graceful empty-host handling
+- 🧠 **Technology Fingerprinting** — `whatweb` with fixed flag syntax
+- 📊 **Auto HTML Report** — professional dark-theme report auto-generated after every scan
 - 🔧 **Self-Healing Install** — auto-installs every missing tool on first run
-- 📊 **HTML Report Generator** — dark-themed professional scan report
-- 📋 **Markdown Summary** — clean recon summary per domain
-- ⏱️ **Per-stage Timing** — see how long each of the 12 stages takes
+- 🩹 **Smart Domain Sanitization** — handles full URLs like `https://example.com/path` cleanly
 
 ---
 
 ## 🖥️ Terminal Preview
 
 ```
- ──────────────────────────────────────────────────────
-  Stage [1/12] : Passive Recon (WHOIS/ASN/IP)
- ──────────────────────────────────────────────────────
- [+] Running WHOIS, ASN, Reverse DNS...
- [✓] Passive Recon Complete
+  ██╗   ██╗ █████╗      ██╗██████╗  █████╗
+  ██║   ██║██╔══██╗     ██║██╔══██╗██╔══██╗
+  ██║   ██║███████║     ██║██████╔╝███████║
+  ╚██╗ ██╔╝██╔══██║██╗ ██║██╔══██╗██╔══██║
+   ╚████╔╝ ██║  ██║╚█████╔╝██║  ██║██║  ██║
+    ╚═══╝  ╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 
-  Stage [2/12] : DNS Reconnaissance
- ──────────────────────────────────────────────────────
- [+] Running dnsx + dig (A, MX, TXT, NS, CNAME)...
- [✓] DNS Records Found: 34
+[?] Enter Domain or URL: example.com
 
-  Stage [3/12] : Subdomain Enumeration
- ──────────────────────────────────────────────────────
- [+] Running Subfinder... (parallel)
- [+] Running Amass...    (parallel)
- [✓] Total Unique Subdomains: 58
+[+] Target: example.com
+[+] Running Subfinder...
+[+] Running Amass...
+[+] Total Unique Subdomains: 47
+[+] Results saved in output/example.com
 
-  Stage [4/12] : Live Host Detection
- ──────────────────────────────────────────────────────
- [+] Running httpx (status + titles)...
- [✓] Live Hosts Found: 24
+[+] Checking live subdomains...
+[+] Live hosts saved to output/example.com/live_subdomains.txt
 
-  Stage [5/12] : WAF Detection
- ──────────────────────────────────────────────────────
- [+] Running wafw00f...
- [✓] WAF Detection: 3 WAFs found across 24 hosts
+[+] Starting Endpoint Collection...
+[+] Running Katana...
+[+] Running gau...
+[+] Running waybackurls...
+[+] Total Unique Endpoints: 1342
 
-  Stage [6/12] : Endpoint Collection
- ──────────────────────────────────────────────────────
- [+] Running Katana...      (parallel)
- [+] Running GAU...         (parallel)
- [+] Running Waybackurls... (parallel)
- [✓] Unique Useful Endpoints: 1342
+[+] Preparing Hosts For Port Scanning...
+[+] Running Masscan...
+[+] Running Naabu...
+[+] Open ports saved to output/example.com/open_ports.txt
 
-  Stage [7/12] : JS File Analysis
- ──────────────────────────────────────────────────────
- [+] Analyzing 50 JS files for secrets...
- [!] JS Findings: 4 potential secrets/endpoints found!
+[+] Detecting Technologies...
+[+] Technology results saved to output/example.com/technologies.txt
 
-  Stage [8/12] : CORS Misconfiguration Check
- ──────────────────────────────────────────────────────
- [+] Testing 24 hosts for CORS issues...
- [!] CORS Issues Found: 2!
-
-  Stage [9/12] : Port Scanning
- ──────────────────────────────────────────────────────
- [+] Running Naabu (top 1000 ports)...
- [+] Running Masscan (rate 5000)...
- [✓] Open Ports Found: 38
-
-  Stage [10/12] : Technology Fingerprinting
- ──────────────────────────────────────────────────────
- [+] Running WhatWeb...
- [✓] 24 hosts fingerprinted
-
-  Stage [11/12] : Directory Bruteforce
- ──────────────────────────────────────────────────────
- [+] Running ffuf on top 5 hosts...
- [✓] Directories Found: 127
-
-  Stage [12/12] : Screenshots
- ──────────────────────────────────────────────────────
- [+] Taking screenshots via gowitness...
- [✓] Screenshots Captured: 24
-
- +------------------------------------+--------+---------+
- | Stage                              | Status |    Time |
- +------------------------------------+--------+---------+
- | Passive Recon (WHOIS/ASN/IP)       |   Done |   8.2s  |
- | DNS Reconnaissance                 |   Done |  12.4s  |
- | Subdomain Enumeration              |   Done |  45.2s  |
- | Live Host Detection                |   Done |  12.1s  |
- | WAF Detection                      |   Done |  18.3s  |
- | Endpoint Collection                |   Done |  55.4s  |
- | JS File Analysis                   |   Done |  22.1s  |
- | CORS Check                         |   Done |   9.8s  |
- | Port Scanning                      |   Done |  33.7s  |
- | Technology Fingerprinting          |   Done |  18.9s  |
- | Directory Bruteforce               |   Done |  95.0s  |
- | Screenshots                        |   Done |  42.5s  |
- +------------------------------------+--------+---------+
- Total Time: 373s (6.2 min)
- Results saved in: output/example.com/
+[+] VAJRA Recon Pipeline Completed Successfully!
+[*] Generating HTML Report...
+✅ Report saved: output/example.com/vajra_report.html
 ```
 
 ---
@@ -151,22 +94,37 @@ python3 main.py
 
 ---
 
-## 📊 Full Pipeline — 12 Stages
+## 📊 Pipeline Overview
 
 | # | Stage | Tool(s) | Output File |
 |---|-------|---------|-------------|
-| 1 | 🌍 Passive Recon | `whois`, `dig`, socket | `passive_recon.txt` |
-| 2 | 🔎 DNS Recon | `dnsx`, `dig` | `dns_records.txt` |
-| 3 | 🔍 Subdomains | `subfinder`, `amass` | `final_subdomains.txt` |
-| 4 | 🌐 Live Hosts | `httpx` (status + title) | `live_subdomains.txt` |
-| 5 | 🛡️ WAF Detection | `wafw00f` | `waf_results.txt` |
-| 6 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` | `all_endpoints.txt` |
-| 7 | 📜 JS Analysis | Python urllib | `js_findings.txt` |
-| 8 | ⚡ CORS Check | Python urllib | `cors_issues.txt` |
-| 9 | 🔌 Port Scan | `masscan` (rate 5000), `naabu` | `open_ports.txt` |
-| 10 | 🧠 Tech Detect | `whatweb` | `technologies.txt` |
-| 11 | 📂 Dir Bruteforce | `ffuf` + seclists | `directories.txt` |
-| 12 | 📸 Screenshots | `gowitness` | `screenshots/` |
+| 1 | 🔍 Subdomain Enumeration | `subfinder`, `amass` (parallel) | `final_subdomains.txt` |
+| 2 | 🌐 Live Host Check | `httpx` | `live_subdomains.txt` |
+| 3 | 🗺️ Endpoint Collection | `katana`, `gau`, `waybackurls` | `all_endpoints.txt` |
+| 4 | 🔌 Port Scanning | `masscan`, `naabu` | `open_ports.txt` |
+| 5 | 🧠 Tech Fingerprinting | `whatweb` | `technologies.txt` |
+| ✨ | 📊 HTML Report (auto) | `report_generator.py` | `vajra_report.html` |
+
+All results saved in `output/<domain>/` directory.
+
+---
+
+## 📊 HTML Report
+
+After every scan, VAJRA **automatically generates** a professional dark-theme HTML report. Open it in any browser:
+
+```bash
+firefox output/example.com/vajra_report.html
+```
+
+**Report includes:**
+- 📈 Stats dashboard — subdomains, live hosts, endpoints, ports, technologies
+- 🔍 Searchable tables for subdomains, endpoints, directories
+- 🚨 Security alerts — CORS issues, JS secrets highlighted in red
+- 🌍 Passive recon, DNS records, WAF detection results
+- 🔌 Open ports table, 🧠 technology fingerprints
+- 📸 Screenshots (if gowitness is used)
+- 🗂️ Sidebar navigation — jump to any section instantly
 
 ---
 
@@ -174,40 +132,21 @@ python3 main.py
 
 ```
 vajra/
-├── main.py                    # 12-stage pipeline entry point
-├── install.sh                 # One-click dependency installer
-├── requirements.txt           # Python deps (rich, pyfiglet)
-├── report_generator.py        # HTML scan report
-├── recon_summary.py           # Markdown summary
+├── main.py                  # Entry point — 5-stage pipeline + auto report
+├── install.sh               # One-click dependency installer
+├── requirements.txt         # Python deps (rich, pyfiglet)
+├── report_generator.py      # Auto HTML report generator
+├── recon_summary.py         # Markdown summary generator
 ├── modules/
-│   ├── passive_recon.py       # WHOIS, ASN, IP, Reverse DNS
-│   ├── dns_recon.py           # DNS records via dnsx + dig
-│   ├── subdomains.py          # Subfinder + Amass (parallel)
-│   ├── live_check.py          # httpx with timeout
-│   ├── waf_detect.py          # WAF fingerprinting
-│   ├── endpoints.py           # Katana + GAU + Wayback (parallel)
-│   ├── js_analysis.py         # JS secret/endpoint scanner
-│   ├── cors_check.py          # CORS misconfiguration checker
-│   ├── ports.py               # Masscan (rate 5000) + Naabu
-│   ├── tech_detect.py         # WhatWeb fingerprinter
-│   ├── dir_bruteforce.py      # ffuf directory bruteforce
-│   └── screenshot.py          # gowitness screenshots
+│   ├── subdomains.py        # Subfinder + Amass (parallel threads)
+│   ├── live_check.py        # httpx with timeout
+│   ├── endpoints.py         # Katana + GAU + Wayback (timeout fixed)
+│   ├── ports.py             # Masscan + Naabu (empty host fix)
+│   └── tech_detect.py       # WhatWeb (flag fix)
 └── core/
-    ├── banner.py              # Rich UI + ASCII banner
-    ├── utils.py               # Tool path resolver
-    └── setup_check.py         # Auto dependency installer
-```
-
----
-
-## 📈 Generate Reports
-
-```bash
-# HTML Report (dark themed, open in browser)
-python3 report_generator.py example.com
-
-# Markdown Summary
-python3 recon_summary.py example.com
+    ├── banner.py            # Rich UI + ASCII banner
+    ├── utils.py             # Tool path resolver
+    └── setup_check.py       # Auto dependency installer
 ```
 
 ---
@@ -219,26 +158,20 @@ python3 recon_summary.py example.com
 - **Permissions:** `sudo` access (required for `masscan`)
 
 ### External Tools (Auto-installed)
-`subfinder` • `amass` • `httpx` • `naabu` • `masscan` • `whatweb` • `katana` • `gau` • `waybackurls` • `dnsx` • `wafw00f` • `ffuf` • `gowitness`
+`subfinder` • `amass` • `httpx` • `naabu` • `masscan` • `whatweb` • `katana` • `gau` • `waybackurls`
 
 ---
 
 ## 🛠️ Changelog
 
-### v2.0.0 — Major Update
-| Change | Description |
-|--------|-------------|
-| 🆕 Passive Recon | WHOIS, ASN, IP, Reverse DNS added |
-| 🆕 DNS Recon | Full DNS record enumeration (dnsx + dig) |
-| 🆕 WAF Detection | wafw00f integration |
-| 🆕 JS Analysis | Scans JS files for API keys, tokens, secrets |
-| 🆕 CORS Check | Detects wildcard + credential CORS issues |
-| 🆕 Dir Bruteforce | ffuf + seclists directory scanning |
-| 🆕 Screenshots | gowitness auto-screenshots all live hosts |
-| ⚡ Endpoints | Katana+GAU+Wayback now run in parallel (3x faster) |
-| ⚡ Ports | Masscan rate 500 → 5000 (10x faster) |
-| 🔧 Timeouts | All subprocess calls have timeouts (no more hangs) |
-| 📊 Pipeline | 5 stages → 12 stages |
+### v1.2.0 — Stability Release
+| Fix | Description |
+|-----|-------------|
+| 📊 Auto HTML Report | Professional dark-theme report auto-generated after every scan |
+| 🗺️ endpoints.py | `gau` timeout fixed (120s), correct `echo domain` command |
+| 🔌 ports.py | Crash fixed when live hosts file is empty |
+| 🧠 tech_detect.py | `--log-brief=` flag syntax fixed |
+| 🩹 Pipeline | Restored clean working 5-stage pipeline |
 
 ### v1.1.0 — Bug Fix Release
 | Fix | Description |
@@ -246,10 +179,9 @@ python3 recon_summary.py example.com
 | 🎨 Banner | ASCII art rendering fixed |
 | 🌐 httpx | Status codes + titles added |
 | 🗺️ Endpoints | Static file filtering + deduplication |
-| 🔌 Masscan | Port range to 1-65535 |
 
 ### v1.0.0 — Initial Release
-- Full auto-pipeline, self-healing installer, HTML + Markdown reports
+- Full auto-pipeline, self-healing installer
 
 ---
 
