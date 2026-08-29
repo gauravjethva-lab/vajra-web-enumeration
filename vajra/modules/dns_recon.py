@@ -1,47 +1,45 @@
-import subprocess, os
+import subprocess
+import os
+
 from rich.console import Console
-from core.utils import require_tool
 
 console = Console()
 
-DNS_RECORD_TYPES = ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SOA", "PTR"]
+DNS_TYPES = ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA"]
+
+
+def run_dig(domain, record_type):
+    try:
+        out = subprocess.check_output(
+            f"dig +short {record_type} {domain} 2>/dev/null",
+            shell=True, text=True, timeout=8
+        ).strip()
+        return [l.strip() for l in out.splitlines() if l.strip()]
+    except Exception:
+        return []
+
 
 def dns_recon(domain):
-    output_file = f"output/{domain}/dns_records.txt"
-    dnsx_bin    = require_tool("dnsx")
+    output_dir  = f"output/{domain}"
+    output_file = f"{output_dir}/dns_records.txt"
+    os.makedirs(output_dir, exist_ok=True)
 
-    console.print("[cyan][+] Running DNS reconnaissance...[/cyan]")
+    print("\n[+] Running DNS Reconnaissance...")
 
     results = []
 
-    # dnsx for bulk DNS resolution
-    if dnsx_bin:
-        subdomains_file = f"output/{domain}/final_subdomains.txt"
-        dnsx_out = f"output/{domain}/dnsx.txt"
-        subprocess.run(
-            f"cat {subdomains_file} | {dnsx_bin} -silent -a -cname -mx -txt -resp -o {dnsx_out} > /dev/null 2>&1",
-            shell=True, timeout=120
-        )
-        if os.path.exists(dnsx_out):
-            with open(dnsx_out) as f:
-                results += [l.strip() for l in f if l.strip()]
+    for rtype in DNS_TYPES:
+        records = run_dig(domain, rtype)
+        for r in records:
+            results.append(f"{rtype}: {r}")
+            print(f"    [{rtype}] {r}")
 
-    # Manual dig for root domain records
-    for rtype in DNS_RECORD_TYPES:
-        try:
-            out = subprocess.check_output(
-                f"dig +short {rtype} {domain} 2>/dev/null",
-                shell=True, text=True, timeout=5
-            ).strip()
-            if out:
-                for line in out.splitlines():
-                    results.append(f"{rtype}: {line.strip()}")
-        except Exception:
-            pass
+    if not results:
+        print("[!] No DNS records found.")
 
     with open(output_file, "w") as f:
-        for r in sorted(set(results)):
+        for r in results:
             f.write(r + "\n")
 
-    console.print(f"[bold green][✓] DNS Records Found: {len(results)}[/bold green]")
-    console.print(f"[white]    Saved → {output_file}[/white]")
+    print(f"[+] DNS Records Found  : {len(results)}")
+    print(f"[+] Saved → {output_file}")
