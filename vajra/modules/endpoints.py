@@ -7,13 +7,9 @@ from core.utils import require_tool
 def collect_endpoints(domain):
 
     input_file = f"output/{domain}/live_subdomains.txt"
-
     katana_output = f"output/{domain}/katana.txt"
-
     gau_output = f"output/{domain}/gau.txt"
-
     wayback_output = f"output/{domain}/wayback.txt"
-
     final_output = f"output/{domain}/all_endpoints.txt"
 
     print("\n[+] Starting Endpoint Collection...")
@@ -25,40 +21,27 @@ def collect_endpoints(domain):
     katana_bin = require_tool("katana")
 
     if katana_bin:
-
         print("[+] Running Katana...")
-
-        katana_command = (
-            f"cat {input_file} | "
-            f"{katana_bin} "
-            f"-silent "
-            f"-jc "
-            f"-kf all "
-            f"-d 3 "
-            f"-o {katana_output} "
-            f"> /dev/null 2>&1"
+        subprocess.run(
+            f"cat {input_file} | {katana_bin} -silent -jc -kf all -d 3 -o {katana_output} > /dev/null 2>&1",
+            shell=True, timeout=300
         )
 
-        subprocess.run(katana_command, shell=True)
-
     # =========================================================
-    # GAU
+    # GAU — fix: use echo domain, not cat live_hosts
     # =========================================================
 
     gau_bin = require_tool("gau")
 
     if gau_bin:
-
         print("[+] Running gau...")
-
-        gau_command = (
-            f"cat {input_file} | "
-            f"{gau_bin} "
-            f"--threads 10 "
-            f"> {gau_output} 2>/dev/null"
-        )
-
-        subprocess.run(gau_command, shell=True)
+        try:
+            subprocess.run(
+                f"echo {domain} | {gau_bin} --threads 10 > {gau_output} 2>/dev/null",
+                shell=True, timeout=120
+            )
+        except subprocess.TimeoutExpired:
+            print("[!] gau timed out — using partial results.")
 
     # =========================================================
     # WAYBACKURLS
@@ -67,16 +50,14 @@ def collect_endpoints(domain):
     wayback_bin = require_tool("waybackurls")
 
     if wayback_bin:
-
         print("[+] Running waybackurls...")
-
-        wayback_command = (
-            f"cat {input_file} | "
-            f"{wayback_bin} "
-            f"> {wayback_output} 2>/dev/null"
-        )
-
-        subprocess.run(wayback_command, shell=True)
+        try:
+            subprocess.run(
+                f"echo {domain} | {wayback_bin} > {wayback_output} 2>/dev/null",
+                shell=True, timeout=120
+            )
+        except subprocess.TimeoutExpired:
+            print("[!] waybackurls timed out — using partial results.")
 
     # =========================================================
     # MERGE RESULTS
@@ -86,36 +67,18 @@ def collect_endpoints(domain):
 
     all_urls = set()
 
-    files = [
-        katana_output,
-        gau_output,
-        wayback_output
-    ]
-
-    for file_path in files:
-
+    for file_path in [katana_output, gau_output, wayback_output]:
         if os.path.exists(file_path):
-
-            with open(file_path, "r") as file:
-
-                for line in file:
-
+            with open(file_path, "r") as f:
+                for line in f:
                     line = line.strip()
-
                     if line:
                         all_urls.add(line)
 
-    with open(final_output, "w") as file:
-
+    with open(final_output, "w") as f:
         for url in sorted(all_urls):
-            file.write(url + "\n")
+            f.write(url + "\n")
 
-    print(
-        f"[+] Endpoints saved to {final_output}"
-    )
-
-    print(
-        f"[+] Total Unique Endpoints: {len(all_urls)}"
-    )
-
+    print(f"[+] Total Unique Endpoints: {len(all_urls)}")
+    print(f"[+] Endpoints saved to {final_output}")
     print("\n[+] Endpoint Collection Completed!")
