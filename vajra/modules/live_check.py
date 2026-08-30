@@ -22,9 +22,9 @@ def check_live_subdomains(domain):
         f"cat {input_file} | "
         f"{httpx_bin} "
         f"-silent "
-        f"-threads 200 "      # 50 → 200 (4x faster)
-        f"-timeout 5 "        # 10s → 5s per host
-        f"-retries 1 "        # 1 retry only
+        f"-threads 150 "     # 50→150 (3x faster, safe)
+        f"-timeout 8 "       # 8s — balance between speed and catching slow hosts
+        f"-retries 1 "       # 1 retry for reliability
         f"-o {output_file} "
         f"> /dev/null 2>&1"
     )
