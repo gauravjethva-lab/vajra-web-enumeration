@@ -1,6 +1,7 @@
 import subprocess
 import os
 import threading
+import shutil
 
 from core.utils import require_tool
 
@@ -23,12 +24,63 @@ def clean_hosts(input_file, clean_file):
     return len(hosts)
 
 
+def validate_services(ports_file, output_file):
+    """Use nmap -sV to confirm open ports and identify services."""
+    if not os.path.exists(ports_file):
+        return
+
+    # Parse host:port pairs
+    targets = {}
+    with open(ports_file) as f:
+        for line in f:
+            line = line.strip()
+            if not line: continue
+            if ":" in line:
+                host, port = line.rsplit(":", 1)
+                if host not in targets:
+                    targets[host] = []
+                targets[host].append(port)
+
+    if not targets:
+        return
+
+    if not shutil.which("nmap"):
+        return
+
+    print(f"[+] Validating services on {len(targets)} hosts with nmap...")
+    results = []
+
+    for host, ports in list(targets.items())[:20]:  # max 20 hosts
+        port_str = ",".join(ports[:20])  # max 20 ports per host
+        try:
+            out = subprocess.check_output(
+                f"nmap -sV -p {port_str} --open -T4 {host} 2>/dev/null",
+                shell=True, text=True, timeout=30
+            )
+            for line in out.splitlines():
+                if "/tcp" in line and "open" in line:
+                    results.append(f"{host} | {line.strip()}")
+        except Exception:
+            pass
+
+    with open(output_file, "w") as f:
+        if results:
+            for r in results:
+                f.write(r + "\n")
+        else:
+            f.write("No services validated.\n")
+
+    print(f"[+] Service validation complete: {len(results)} confirmed services")
+    print(f"[+] Saved → {output_file}")
+
+
 def scan_ports(domain):
-    input_file       = f"output/{domain}/live_subdomains.txt"
-    clean_hosts_file = f"output/{domain}/clean_hosts.txt"
-    masscan_output   = f"output/{domain}/masscan.txt"
-    naabu_output     = f"output/{domain}/naabu.txt"
-    final_output     = f"output/{domain}/open_ports.txt"
+    input_file         = f"output/{domain}/live_subdomains.txt"
+    clean_hosts_file   = f"output/{domain}/clean_hosts.txt"
+    masscan_output     = f"output/{domain}/masscan.txt"
+    naabu_output       = f"output/{domain}/naabu.txt"
+    final_output       = f"output/{domain}/open_ports.txt"
+    validated_output   = f"output/{domain}/validated_services.txt"
 
     print("\n[+] Preparing hosts for port scanning...")
 
@@ -43,7 +95,7 @@ def scan_ports(domain):
     masscan_bin = require_tool("masscan")
     naabu_bin   = require_tool("naabu")
 
-    # ── Run masscan + naabu in PARALLEL ─────────────────────
+    # ── Masscan + Naabu parallel ─────────────────────────────
     def run_masscan():
         if not masscan_bin: return
         print("[+] Running Masscan (rate 5000)...")
@@ -96,6 +148,9 @@ def scan_ports(domain):
         for item in sorted(combined):
             f.write(item + "\n")
 
-    print(f"[+] Open ports found: {len(combined)}")
+    print(f"[+] Raw port observations : {len(combined)}")
     print(f"[+] Saved → {final_output}")
+
+    # ── Service validation (nmap -sV) ────────────────────────
+    validate_services(final_output, validated_output)
     print("\n[+] Port Scanning Completed!")
