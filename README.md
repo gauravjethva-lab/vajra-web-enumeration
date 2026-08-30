@@ -2,170 +2,158 @@
 
 ![VAJRA Banner](assets/banner.svg)
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Version](https://img.shields.io/badge/Version-1.3.0-orange?style=for-the-badge)
-![Stages](https://img.shields.io/badge/Pipeline-9%20Stages-purple?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
-![GitHub stars](https://img.shields.io/github/stars/gauravjethva-lab/vajra-web-enumeration?style=for-the-badge)
+<br>
+
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)](https://kali.org)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.4.0-f0883e?style=for-the-badge)](https://github.com/gauravjethva-lab/vajra-web-enumeration/releases)
+[![Pipeline](https://img.shields.io/badge/Pipeline-9%20Stages-a855f7?style=for-the-badge)](#pipeline)
+[![Stars](https://img.shields.io/github/stars/gauravjethva-lab/vajra-web-enumeration?style=for-the-badge&color=f0883e)](https://github.com/gauravjethva-lab/vajra-web-enumeration/stargazers)
+
+<br>
+
+> **Full auto-pipeline Web Enumeration & Attack Surface Reconnaissance Framework**
+> Built for Kali Linux — 9 stages, parallel execution, professional HTML report with author credit.
+
+<br>
+
+[Quick Start](#-quick-start) · [Pipeline](#-pipeline) · [Report](#-html-report) · [Changelog](#-changelog) · [Legal](#-legal-disclaimer)
 
 </div>
 
 ---
 
-## 🔱 What is VAJRA?
+## 👤 Author
 
-**VAJRA** is a full auto-pipeline web enumeration & reconnaissance framework built for **Kali Linux**. It chains 9 stages of recon — from WHOIS all the way to subdomain takeover checks and screenshots — into a **single automated workflow**, then auto-generates a **professional HTML + Markdown report** with your name on it.
-
-> Run one command. VAJRA scans everything. Reports everything.
+<table>
+<tr>
+<td><strong>Name</strong></td><td>Gaurav Jethva</td>
+</tr>
+<tr>
+<td><strong>GitHub</strong></td><td><a href="https://github.com/gauravjethva-lab">@gauravjethva-lab</a></td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td><td><a href="https://github.com/gauravjethva-lab/vajra-web-enumeration">VAJRA Web Enumeration</a></td>
+</tr>
+</table>
 
 ---
 
-## 👤 Author
+## 🔱 What is VAJRA?
 
-**Gaurav Jethva**
-- GitHub: [@gauravjethva-lab](https://github.com/gauravjethva-lab)
-- Tool: [VAJRA Web Enumeration](https://github.com/gauravjethva-lab/vajra-web-enumeration)
+**VAJRA** is a **9-stage automated web enumeration and attack surface reconnaissance framework** built for Kali Linux. It chains together the best open-source security tools into a single parallel-execution pipeline — from WHOIS all the way to subdomain takeover detection and smart screenshots — then auto-generates a **professional dark-theme HTML report** and **Markdown summary** with full scan coverage metrics.
+
+**VAJRA is an Attack Surface Mapper — not a vulnerability scanner.**
+Every report clearly distinguishes between raw reconnaissance observations and confirmed security issues.
 
 ---
 
 ## ✨ Features
 
-- 🌍 **WHOIS Recon** — Registrar, creation/expiry date, nameservers
-- 🔎 **DNS Recon** — A, AAAA, MX, NS, TXT, CNAME, SOA records via `dig`
-- 🔍 **Subdomain Enumeration** — `subfinder` + `amass` in parallel threads
-- 🌐 **Live Host Detection** — `httpx` with timeout protection
-- 🗺️ **Endpoint Collection** — `katana` + `gau` + `waybackurls` with static file filtering
-- 🔌 **Port Scanning** — `masscan` + `naabu` with graceful error handling
-- 🧠 **Technology Fingerprinting** — `whatweb`
-- 🔗 **Subdomain Takeover Check** — 25 services (GitHub Pages, Heroku, AWS S3, Azure, Fastly, Zendesk, and more)
-- 📸 **Smart Screenshots** — screenshots of live subdomains + directories, only genuinely alive URLs
-- 📊 **Auto HTML Report** — professional dark-theme report with author name, auto-generated after scan
-- 📋 **Auto Markdown Summary** — clean `.md` summary auto-generated after scan
-- 🔧 **Self-Healing Install** — auto-installs every missing tool on first run
-- 🩹 **Smart Domain Sanitization** — handles full URLs like `https://example.com/path`
-
----
-
-## 🖥️ Terminal Preview
-
-```
- ─────────────────────────────────────────────────────
-  Stage [1/9] : WHOIS Reconnaissance
- ─────────────────────────────────────────────────────
-    Registrar: GoDaddy.com LLC
-    Creation Date: 2010-04-14
-    Name Server: NS1.EXAMPLE.COM
- [+] WHOIS entries found: 5
-
- Stage [2/9] : DNS Reconnaissance
- ─────────────────────────────────────────────────────
-    [A]   93.184.216.34
-    [MX]  mail.example.com
-    [NS]  ns1.example.com
-    [TXT] v=spf1 include:_spf.google.com ~all
- [+] DNS Records Found: 8
-
- Stage [3/9] : Subdomain Enumeration
- ─────────────────────────────────────────────────────
- [+] Running Subfinder...
- [+] Running Amass...
- [+] Total Unique Subdomains: 47
-
- Stage [4/9] : Live Host Detection
- ─────────────────────────────────────────────────────
- [+] Live hosts saved → live_subdomains.txt
-
- Stage [5/9] : Endpoint Collection
- ─────────────────────────────────────────────────────
- [+] Raw URLs collected : 8420
- [+] After filtering    : 1342 (static files removed)
-
- Stage [6/9] : Port Scanning
- ─────────────────────────────────────────────────────
- [+] Open ports saved → open_ports.txt
-
- Stage [7/9] : Technology Fingerprinting
- ─────────────────────────────────────────────────────
- [+] Technology results saved → technologies.txt
-
- Stage [8/9] : Subdomain Takeover Check
- ─────────────────────────────────────────────────────
- [*] Checking 47 subdomains for takeover...
- [VULNERABLE] old.example.com → CNAME: example.github.io (github.io)
- [✓] No further takeover vulnerabilities found.
-
- Stage [9/9] : Screenshots (Live + Dirs)
- ─────────────────────────────────────────────────────
- [+] Live subdomains : 23 URLs
- [+] Directories     : 12 URLs
- [+] Verifying genuinely alive URLs...
- [✓] Genuinely alive: 31 / 35 URLs
- [✓] Screenshots Captured: 31
-
- [+] VAJRA Recon Pipeline Completed!
- [*] Generating HTML Report...
- ✅ Report saved: output/example.com/vajra_report.html
- [*] Generating Markdown Summary...
- [+] Markdown summary saved: output/example.com/recon_summary.md
-```
+| Category | Feature |
+|----------|---------|
+| 🌍 **Passive Recon** | WHOIS lookup with Python fallback |
+| 🔎 **DNS Recon** | A, AAAA, MX, NS, TXT, CNAME, SOA via `dig` + socket fallback |
+| 🔍 **Subdomain Enum** | `subfinder` + `amass` running in parallel threads |
+| 🌐 **Live Detection** | `httpx` — 150 threads, 8s balanced timeout |
+| 🗺️ **Endpoints** | `katana` + `gau` + `waybackurls` in parallel — with URL classification |
+| 🎯 **URL Classification** | Auto-sorts into In-Scope / API / Third-Party |
+| 🔌 **Port Scanning** | `masscan` + `naabu` in parallel — raw observations |
+| ✅ **Service Validation** | `nmap -sV` confirms actual services on found ports |
+| 🧠 **Tech Fingerprint** | `whatweb` technology detection |
+| 🔗 **Takeover Check** | 25 service fingerprints — parallel with 20 workers |
+| 📸 **Smart Screenshots** | Verifies alive URLs (30 threads) before screenshotting |
+| 📊 **HTML Report** | Professional dark-theme report with tabs, search, coverage table |
+| 📋 **MD Summary** | Clean Markdown summary auto-generated after scan |
+| 🔧 **Self-Healing** | Auto-installs every missing tool on first run |
+| ⚡ **Parallel Execution** | Every stage optimized for maximum speed |
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-# 1. Clone the repo
+# Clone
 git clone https://github.com/gauravjethva-lab/vajra-web-enumeration.git
 cd vajra-web-enumeration/vajra
 
-# 2. Run installer
+# Install dependencies
 bash install.sh
 
-# 3. Launch VAJRA
+# Run
 python3 main.py
 ```
 
-> ⚠️ First run installs all missing tools automatically. Every run after that is fast.
+> First run auto-installs all missing tools. Every run after is fast.
 
 ---
 
-## 📊 Full Pipeline — 9 Stages
+## 📊 Pipeline
 
-| # | Stage | Tool(s) | Output File |
-|---|-------|---------|-------------|
-| 1 | 🌍 WHOIS Recon | `whois` + Python socket | `whois.txt` |
-| 2 | 🔎 DNS Recon | `dig` + Python socket | `dns_records.txt` |
+<div id="pipeline"></div>
+
+```
+[1/9]  🌍 WHOIS Recon          →  whois.txt
+[2/9]  🔎 DNS Recon            →  dns_records.txt
+[3/9]  🔍 Subdomain Enum       →  final_subdomains.txt
+[4/9]  🌐 Live Host Detection  →  live_subdomains.txt
+[5/9]  🗺️  Endpoint Collection  →  all_endpoints.txt
+                                   inscope_endpoints.txt
+                                   api_endpoints.txt
+                                   third_party_urls.txt
+[6/9]  🔌 Port Scanning        →  open_ports.txt
+       ✅ Service Validation   →  validated_services.txt
+[7/9]  🧠 Tech Fingerprinting  →  technologies.txt
+[8/9]  🔗 Takeover Check       →  takeover_results.txt
+[9/9]  📸 Screenshots          →  screenshots/
+        ✨ Auto HTML Report    →  vajra_report.html
+        ✨ Auto MD Summary     →  recon_summary.md
+```
+
+| # | Stage | Tools | Output |
+|---|-------|-------|--------|
+| 1 | 🌍 WHOIS | `whois` + Python socket | `whois.txt` |
+| 2 | 🔎 DNS | `dig` + Python socket | `dns_records.txt` |
 | 3 | 🔍 Subdomains | `subfinder`, `amass` (parallel) | `final_subdomains.txt` |
-| 4 | 🌐 Live Hosts | `httpx` | `live_subdomains.txt` |
-| 5 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` + filter | `all_endpoints.txt` |
-| 6 | 🔌 Port Scan | `masscan`, `naabu` | `open_ports.txt` |
-| 7 | 🧠 Tech Detect | `whatweb` | `technologies.txt` |
-| 8 | 🔗 Takeover Check | Python (25 service fingerprints) | `takeover_results.txt` |
-| 9 | 📸 Screenshots | `gowitness` (live + dirs verified) | `screenshots/` |
-| ✨ | 📊 HTML Report (auto) | `report_generator.py` | `vajra_report.html` |
-| ✨ | 📋 MD Summary (auto) | `recon_summary.py` | `recon_summary.md` |
+| 4 | 🌐 Live Hosts | `httpx` 150 threads | `live_subdomains.txt` |
+| 5 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` (parallel) | `all_endpoints.txt` + classified |
+| 6 | 🔌 Ports + ✅ Services | `masscan`, `naabu` (parallel) + `nmap -sV` | `open_ports.txt` + `validated_services.txt` |
+| 7 | 🧠 Tech | `whatweb` | `technologies.txt` |
+| 8 | 🔗 Takeover | Python (25 fingerprints, 20 workers) | `takeover_results.txt` |
+| 9 | 📸 Screenshots | `gowitness` v2/v3 | `screenshots/` |
 
 ---
 
 ## 📊 HTML Report
 
-After every scan, VAJRA **automatically generates** a professional dark-theme HTML report. Open it in any browser:
+<div id="report"></div>
+
+After every scan, VAJRA **automatically generates** a professional dark-theme HTML report. Open in any browser:
 
 ```bash
 firefox output/example.com/vajra_report.html
 ```
 
-**Report includes:**
-- 👤 **Author credit** — Gaurav Jethva on every report
-- 📈 Stats dashboard — all findings at a glance
-- 🚨 Security alerts — takeover vulnerabilities highlighted in red
-- 🔍 Searchable tables for subdomains, endpoints, directories
-- 🌍 WHOIS + DNS records
-- 🔗 Takeover results, 🔌 Open ports, 🧠 Technologies
-- 📸 Embedded screenshots (inline in report)
-- 🗂️ Sidebar navigation
+### Report Sections
+
+| Section | Content |
+|---------|---------|
+| 📋 Executive Summary | Target, date, author, scan type, confidence level |
+| ⚠️ Confidence Note | Clearly states this is recon, not a pentest |
+| 📊 Stats Dashboard | 10 key metrics at a glance |
+| 🚨 Alerts | Only confirmed findings highlighted |
+| 🌍 WHOIS | Registrar, dates, nameservers |
+| 🔎 DNS | All record types |
+| 🔍 Subdomains | Searchable table |
+| 🌐 Live Hosts | Status codes + page titles |
+| 🗺️ Endpoints | **Tabbed view** — In-Scope / API / All URLs |
+| 🔌 Ports | **Tabbed view** — Validated Services / Raw Observations |
+| 🧠 Technologies | Fingerprinted hosts |
+| 🔗 Takeover | Vulnerable subdomains highlighted in red |
+| 📸 Screenshots | Inline embedded images |
+| 📊 Scan Coverage | Full coverage metrics table |
+| 👤 Footer | Author credit on every report |
 
 ---
 
@@ -173,25 +161,25 @@ firefox output/example.com/vajra_report.html
 
 ```
 vajra/
-├── main.py                    # 9-stage pipeline + auto reports
-├── install.sh                 # One-click dependency installer
-├── requirements.txt           # Python deps (rich, pyfiglet)
-├── report_generator.py        # Auto HTML report (with author name)
-├── recon_summary.py           # Auto Markdown summary
+├── main.py                   # 9-stage pipeline entry point
+├── install.sh                # One-click dependency installer
+├── requirements.txt          # Python dependencies
+├── report_generator.py       # Professional HTML report generator
+├── recon_summary.py          # Markdown summary generator
 ├── modules/
-│   ├── whois_recon.py         # WHOIS + IP/hostname fallback
-│   ├── dns_recon.py           # dig + Python socket fallback
-│   ├── subdomains.py          # Subfinder + Amass (parallel)
-│   ├── live_check.py          # httpx with timeout
-│   ├── endpoints.py           # Katana + GAU + Wayback + filter
-│   ├── ports.py               # Masscan + Naabu
-│   ├── tech_detect.py         # WhatWeb
-│   ├── takeover_check.py      # 25-service takeover fingerprints
-│   └── screenshot.py          # Alive-verified screenshots
+│   ├── whois_recon.py        # WHOIS + Python fallback
+│   ├── dns_recon.py          # dig + socket fallback
+│   ├── subdomains.py         # Subfinder + Amass (parallel)
+│   ├── live_check.py         # httpx — 150 threads, 8s timeout
+│   ├── endpoints.py          # Katana + GAU + Wayback (parallel) + URL classification
+│   ├── ports.py              # Masscan + Naabu (parallel) + nmap validation
+│   ├── tech_detect.py        # WhatWeb fingerprinting
+│   ├── takeover_check.py     # 25 service fingerprints, 20 workers
+│   └── screenshot.py         # Alive verification (30 threads) + gowitness v2/v3
 └── core/
-    ├── banner.py              # Rich UI + ASCII banner
-    ├── utils.py               # Tool path resolver
-    └── setup_check.py         # Auto dependency installer
+    ├── banner.py             # Rich terminal UI
+    ├── utils.py              # Tool path resolver
+    └── setup_check.py        # Auto dependency installer
 ```
 
 ---
@@ -200,51 +188,87 @@ vajra/
 
 - **OS:** Kali Linux (recommended) / Debian-based Linux
 - **Python:** 3.8+
-- **Permissions:** `sudo` access (required for `masscan`)
+- **Permissions:** `sudo` required for `masscan`
 
-### External Tools (Auto-installed)
-`subfinder` • `amass` • `httpx` • `naabu` • `masscan` • `whatweb` • `katana` • `gau` • `waybackurls` • `gowitness`
+### Auto-Installed Tools
+`subfinder` · `amass` · `httpx` · `naabu` · `masscan` · `whatweb` · `katana` · `gau` · `waybackurls` · `gowitness`
+
+### Python Dependencies
+```
+rich >= 13.0.0
+pyfiglet >= 1.0.0
+```
 
 ---
 
 ## 🛠️ Changelog
 
-### v1.3.0 — Full Recon Release
-| Addition | Description |
-|----------|-------------|
-| 🔗 Takeover Check | 25 service fingerprints — GitHub, Heroku, S3, Azure, Fastly, Zendesk + more |
-| 📸 Smart Screenshots | Live subdomains + directories, genuinely alive URLs only |
-| 🌍 WHOIS Module | whois command + Python IP fallback |
-| 🔎 DNS Module | dig + Python socket fallback |
-| 🩹 Endpoint Filter | Static files (.png .css .woff etc.) removed |
-| 📋 Markdown Summary | Auto-generated after every scan |
-| 👤 Author Credit | Gaurav Jethva on every HTML report |
+<details>
+<summary><strong>v1.4.0 — Professional Report + Speed Optimizations</strong></summary>
 
-### v1.2.0 — Stability Release
-| Fix | Description |
-|-----|-------------|
-| 📊 Auto HTML Report | Auto-generated after scan |
-| 🗺️ Endpoints | gau timeout fixed |
-| 🔌 Ports | Empty host crash fixed |
-| 🧠 Tech | whatweb flag fixed |
+| Change | Detail |
+|--------|--------|
+| 🎯 URL Classification | Auto-sorts into In-Scope / API / Third-Party |
+| ✅ Service Validation | `nmap -sV` confirms actual services on found ports |
+| 📊 Coverage Table | Every report shows full scan coverage metrics |
+| ⚠️ Confidence Level | Medium/Low confidence clearly stated in every report |
+| 📋 Report Disclaimer | Clearly distinguishes recon from pentest |
+| 🗂️ Tabbed Report | Endpoints and Ports have tabbed views |
+| ⚡ Parallel Endpoints | Katana + GAU + Wayback run simultaneously |
+| ⚡ Parallel Ports | Masscan + Naabu run simultaneously |
+| ⚡ httpx 150 threads | Balanced speed with 8s timeout |
+| ⚡ Takeover 20 workers | Parallel subdomain takeover checking |
+| ⚡ Screenshot 30 threads | Parallel alive URL verification |
 
-### v1.0.0 — Initial Release
-- 5-stage pipeline, self-healing installer
+</details>
+
+<details>
+<summary><strong>v1.3.0 — Takeover + Screenshots</strong></summary>
+
+- Subdomain takeover check (25 service fingerprints)
+- Smart screenshots — alive-verified, supports gowitness v2/v3
+- WHOIS and DNS modules added
+
+</details>
+
+<details>
+<summary><strong>v1.2.0 — Stability</strong></summary>
+
+- Auto HTML + Markdown reports after every scan
+- gau timeout fixed, ports empty-host crash fixed
+- whatweb flag syntax fixed
+
+</details>
+
+<details>
+<summary><strong>v1.0.0 — Initial Release</strong></summary>
+
+- 5-stage pipeline with self-healing installer
+
+</details>
 
 ---
 
 ## ⚠️ Legal Disclaimer
 
-> **VAJRA is for authorized security testing only.**
-> Only use on systems you own or have explicit written permission to test.
-> The author is not responsible for any misuse.
+> **VAJRA is designed for authorized security testing only.**
+>
+> Only use VAJRA against domains and systems you **own** or have **explicit written permission** to test. Unauthorized use against systems you do not have permission to test is **illegal** and **unethical**.
+>
+> The author is not responsible for any misuse or damage caused by this tool.
+>
+> VAJRA generates **reconnaissance reports** — not penetration test reports. All findings require authorized human validation before being classified as security vulnerabilities.
 
 ---
 
 <div align="center">
 
-**⚡ Built for the security community. Use responsibly. ⚡**
+**⚡ Built for the security community — Use responsibly ⚡**
 
-*If VAJRA helps you, give it a ⭐ on GitHub!*
+*If VAJRA helps your work, give it a ⭐ on GitHub!*
+
+<br>
+
+[![GitHub](https://img.shields.io/badge/GitHub-gauravjethva--lab-f0883e?style=for-the-badge&logo=github)](https://github.com/gauravjethva-lab)
 
 </div>
