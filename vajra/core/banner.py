@@ -45,7 +45,7 @@ def sanitize_domain(raw_target):
 
     host = parsed.netloc or parsed.path
 
-    host = host.strip("/").split("/")[0]
+    host = host.strip("/").split("/")[0].split(":")[0]
 
     host = host.rstrip(".")
 
