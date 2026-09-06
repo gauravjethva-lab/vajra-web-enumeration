@@ -7,18 +7,19 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)](https://kali.org)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.4.0-f0883e?style=for-the-badge)](https://github.com/gauravjethva-lab/vajra-web-enumeration/releases)
-[![Pipeline](https://img.shields.io/badge/Pipeline-9%20Stages-a855f7?style=for-the-badge)](#pipeline)
+[![Version](https://img.shields.io/badge/Version-2.0.0-f0883e?style=for-the-badge)](https://github.com/gauravjethva-lab/vajra-web-enumeration/releases)
+[![Pipeline](https://img.shields.io/badge/Pipeline-14%20Stages-a855f7?style=for-the-badge)](#pipeline)
+[![Tests](https://img.shields.io/badge/Tests-16%2F16%20Passing-22c55e?style=for-the-badge)](#)
 [![Stars](https://img.shields.io/github/stars/gauravjethva-lab/vajra-web-enumeration?style=for-the-badge&color=f0883e)](https://github.com/gauravjethva-lab/vajra-web-enumeration/stargazers)
 
 <br>
 
 > **Full auto-pipeline Web Enumeration & Attack Surface Reconnaissance Framework**
-> Built for Kali Linux — 9 stages, parallel execution, professional HTML report with author credit.
+> 14 stages · Parallel execution · Resume & Cache · Professional HTML report
 
 <br>
 
-[Quick Start](#-quick-start) · [Pipeline](#-pipeline) · [Report](#-html-report) · [Changelog](#-changelog) · [Legal](#-legal-disclaimer)
+[Quick Start](#-quick-start) · [Pipeline](#-pipeline) · [Features](#-features) · [Report](#-html-report) · [Changelog](#-changelog) · [Legal](#-legal-disclaimer)
 
 </div>
 
@@ -26,48 +27,66 @@
 
 ## 👤 Author
 
-<table>
-<tr>
-<td><strong>Name</strong></td><td>Gaurav Jethva</td>
-</tr>
-<tr>
-<td><strong>GitHub</strong></td><td><a href="https://github.com/gauravjethva-lab">@gauravjethva-lab</a></td>
-</tr>
-<tr>
-<td><strong>Tool</strong></td><td><a href="https://github.com/gauravjethva-lab/vajra-web-enumeration">VAJRA Web Enumeration</a></td>
-</tr>
-</table>
+| Field | Info |
+|-------|------|
+| **Name** | Gaurav Jethva |
+| **GitHub** | [@gauravjethva-lab](https://github.com/gauravjethva-lab) |
+| **Tool** | [VAJRA Web Enumeration Framework](https://github.com/gauravjethva-lab/vajra-web-enumeration) |
 
 ---
 
 ## 🔱 What is VAJRA?
 
-**VAJRA** is a **9-stage automated web enumeration and attack surface reconnaissance framework** built for Kali Linux. It chains together the best open-source security tools into a single parallel-execution pipeline — from WHOIS all the way to subdomain takeover detection and smart screenshots — then auto-generates a **professional dark-theme HTML report** and **Markdown summary** with full scan coverage metrics.
+**VAJRA** is a **14-stage automated web enumeration and attack surface reconnaissance framework** built for Kali Linux.
 
-**VAJRA is an Attack Surface Mapper — not a vulnerability scanner.**
-Every report clearly distinguishes between raw reconnaissance observations and confirmed security issues.
+It chains together the best open-source security tools into a **single parallel-execution pipeline** — from WHOIS all the way to Nuclei vulnerability scanning and smart screenshots — then **auto-generates a professional HTML report** and Markdown summary with full scan coverage metrics.
+
+Key design principles:
+- **Resume** — scan interrupted? Run again, pick up where you stopped
+- **Cache** — same domain rescanned? Unchanged stages skip instantly
+- **Smart Scope** — auto-classifies subdomains as High / Medium / Low priority
+- **Parallel** — every slow stage runs multiple tools simultaneously
+- **100% working** — 16/16 automated tests pass before every release
+
+> VAJRA is an **Attack Surface Mapper**, not a vulnerability scanner.
+> Every report clearly separates raw reconnaissance from confirmed findings.
 
 ---
 
 ## ✨ Features
 
-| Category | Feature |
-|----------|---------|
-| 🌍 **Passive Recon** | WHOIS lookup with Python fallback |
-| 🔎 **DNS Recon** | A, AAAA, MX, NS, TXT, CNAME, SOA via `dig` + socket fallback |
-| 🔍 **Subdomain Enum** | `subfinder` + `amass` running in parallel threads |
+### Speed & Performance
+| Feature | Detail |
+|---------|--------|
+| ⚡ **Parallel Execution** | Subfinder+Amass, Katana+GAU+Wayback, Masscan+Naabu — all run simultaneously |
+| 💾 **Cache System** | Results cached per domain+stage — rescan is instant for unchanged data |
+| 🔄 **Resume Scan** | Ctrl+C mid-scan? Run again — VAJRA resumes from last completed stage |
+| 🎯 **Smart Scope** | Auto-classifies subdomains: High (admin/api/dev) · Medium · Low (cdn/static) |
+
+### Detection & Coverage
+| Feature | Detail |
+|---------|--------|
+| 🌍 **WHOIS Recon** | Registrar, dates, nameservers — Python fallback if whois missing |
+| 🔎 **DNS Recon** | A, AAAA, MX, NS, TXT, CNAME, SOA — Python socket fallback if dig missing |
+| 🔍 **Subdomain Enum** | `subfinder` + `amass` in parallel threads |
 | 🌐 **Live Detection** | `httpx` — 150 threads, 8s balanced timeout |
-| 🗺️ **Endpoints** | `katana` + `gau` + `waybackurls` in parallel — with URL classification |
-| 🎯 **URL Classification** | Auto-sorts into In-Scope / API / Third-Party |
-| 🔌 **Port Scanning** | `masscan` + `naabu` in parallel — raw observations |
+| 🔐 **SSL/TLS Analysis** | Cert expiry, weak ciphers, TLS version — pure Python, no extra tools |
+| 🗺️ **Endpoints** | `katana` + `gau` + `waybackurls` parallel — auto-classified: In-Scope / API / Third-Party |
+| 📧 **Email Recon** | Finds emails in endpoints + WHOIS, generates common patterns, breach check link |
+| 🕵️ **Google Dorks** | 20 targeted dork queries auto-generated — clickable HTML file |
+| 🔌 **Port Scanning** | `masscan` + `naabu` parallel — raw observations |
 | ✅ **Service Validation** | `nmap -sV` confirms actual services on found ports |
 | 🧠 **Tech Fingerprint** | `whatweb` technology detection |
-| 🔗 **Takeover Check** | 25 service fingerprints — parallel with 20 workers |
-| 📸 **Smart Screenshots** | Verifies alive URLs (30 threads) before screenshotting |
-| 📊 **HTML Report** | Professional dark-theme report with tabs, search, coverage table |
-| 📋 **MD Summary** | Clean Markdown summary auto-generated after scan |
-| 🔧 **Self-Healing** | Auto-installs every missing tool on first run |
-| ⚡ **Parallel Execution** | Every stage optimized for maximum speed |
+| 🔴 **Nuclei Scan** | 1000+ vulnerability templates — CVEs, misconfigs, exposures |
+| 🔗 **Takeover Check** | 25 service fingerprints — 20 parallel workers |
+| 📸 **Smart Screenshots** | Alive-verified (30 threads), gowitness v2+v3 support |
+
+### Reporting
+| Feature | Detail |
+|---------|--------|
+| 📊 **HTML Report** | Dark-theme, tabbed sections, searchable tables, scan coverage, author credit |
+| 📋 **Markdown Summary** | Clean `.md` summary auto-generated after every scan |
+| 🗂️ **URL Classification** | In-Scope / API endpoints / Third-Party automatically separated |
 
 ---
 
@@ -78,14 +97,15 @@ Every report clearly distinguishes between raw reconnaissance observations and c
 git clone https://github.com/gauravjethva-lab/vajra-web-enumeration.git
 cd vajra-web-enumeration/vajra
 
-# Install dependencies
+# Install all dependencies
 bash install.sh
 
 # Run
 python3 main.py
 ```
 
-> First run auto-installs all missing tools. Every run after is fast.
+> First run auto-installs all missing tools. Every run after that is fast.
+> If a scan is interrupted — just run `python3 main.py` again with the same domain to resume.
 
 ---
 
@@ -94,34 +114,40 @@ python3 main.py
 <div id="pipeline"></div>
 
 ```
-[1/9]  🌍 WHOIS Recon          →  whois.txt
-[2/9]  🔎 DNS Recon            →  dns_records.txt
-[3/9]  🔍 Subdomain Enum       →  final_subdomains.txt
-[4/9]  🌐 Live Host Detection  →  live_subdomains.txt
-[5/9]  🗺️  Endpoint Collection  →  all_endpoints.txt
-                                   inscope_endpoints.txt
-                                   api_endpoints.txt
-                                   third_party_urls.txt
-[6/9]  🔌 Port Scanning        →  open_ports.txt
-       ✅ Service Validation   →  validated_services.txt
-[7/9]  🧠 Tech Fingerprinting  →  technologies.txt
-[8/9]  🔗 Takeover Check       →  takeover_results.txt
-[9/9]  📸 Screenshots          →  screenshots/
-        ✨ Auto HTML Report    →  vajra_report.html
-        ✨ Auto MD Summary     →  recon_summary.md
+[01/14] 🌍  WHOIS Reconnaissance
+[02/14] 🔎  DNS Reconnaissance
+[03/14] 🔍  Subdomain Enumeration      ← parallel: subfinder + amass
+[04/14] 🎯  Smart Scope Analysis
+[05/14] 🌐  Live Host Detection         ← 150 threads
+[06/14] 🔐  SSL/TLS Analysis           ← 20 parallel workers
+[07/14] 🗺️   Endpoint Collection        ← parallel: katana + gau + waybackurls
+[08/14] 📧  Email & Breach Recon
+[09/14] 🕵️   Google Dork Generation
+[10/14] 🔌  Port Scanning & Validation  ← parallel: masscan + naabu + nmap
+[11/14] 🧠  Technology Fingerprinting
+[12/14] 🔴  Nuclei Vulnerability Scan   ← 25 parallel workers
+[13/14] 🔗  Subdomain Takeover Check   ← 20 parallel workers
+[14/14] 📸  Screenshots                 ← 30 thread alive-verify + gowitness
+       ✨   Auto HTML Report            → vajra_report.html
+       ✨   Auto Markdown Summary       → recon_summary.md
 ```
 
-| # | Stage | Tools | Output |
-|---|-------|-------|--------|
+| # | Stage | Tools | Output File |
+|---|-------|-------|------------|
 | 1 | 🌍 WHOIS | `whois` + Python socket | `whois.txt` |
 | 2 | 🔎 DNS | `dig` + Python socket | `dns_records.txt` |
-| 3 | 🔍 Subdomains | `subfinder`, `amass` (parallel) | `final_subdomains.txt` |
-| 4 | 🌐 Live Hosts | `httpx` 150 threads | `live_subdomains.txt` |
-| 5 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` (parallel) | `all_endpoints.txt` + classified |
-| 6 | 🔌 Ports + ✅ Services | `masscan`, `naabu` (parallel) + `nmap -sV` | `open_ports.txt` + `validated_services.txt` |
-| 7 | 🧠 Tech | `whatweb` | `technologies.txt` |
-| 8 | 🔗 Takeover | Python (25 fingerprints, 20 workers) | `takeover_results.txt` |
-| 9 | 📸 Screenshots | `gowitness` v2/v3 | `screenshots/` |
+| 3 | 🔍 Subdomains | `subfinder`, `amass` | `final_subdomains.txt` |
+| 4 | 🎯 Smart Scope | Python classifier | `scope_high/medium/low.txt` |
+| 5 | 🌐 Live Hosts | `httpx` 150 threads | `live_subdomains.txt` |
+| 6 | 🔐 SSL/TLS | Python ssl module | `ssl_analysis.txt` |
+| 7 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` | `all_endpoints.txt` + classified |
+| 8 | 📧 Email Recon | Python + WHOIS parse | `email_recon.txt` |
+| 9 | 🕵️ Dorks | Python generator | `google_dorks.txt` + `.html` |
+| 10 | 🔌 Ports + ✅ Services | `masscan`, `naabu` + `nmap -sV` | `open_ports.txt` + `validated_services.txt` |
+| 11 | 🧠 Tech | `whatweb` | `technologies.txt` |
+| 12 | 🔴 Nuclei | `nuclei` templates | `nuclei_findings.txt` |
+| 13 | 🔗 Takeover | Python 25 fingerprints | `takeover_results.txt` |
+| 14 | 📸 Screenshots | `gowitness` v2/v3 | `screenshots/` |
 
 ---
 
@@ -129,30 +155,28 @@ python3 main.py
 
 <div id="report"></div>
 
-After every scan, VAJRA **automatically generates** a professional dark-theme HTML report. Open in any browser:
+Auto-generated after every scan. Open in any browser:
 
 ```bash
 firefox output/example.com/vajra_report.html
 ```
 
-### Report Sections
-
 | Section | Content |
 |---------|---------|
 | 📋 Executive Summary | Target, date, author, scan type, confidence level |
-| ⚠️ Confidence Note | Clearly states this is recon, not a pentest |
+| ⚠️ Confidence Note | Clearly states recon vs pentest distinction |
 | 📊 Stats Dashboard | 10 key metrics at a glance |
-| 🚨 Alerts | Only confirmed findings highlighted |
-| 🌍 WHOIS | Registrar, dates, nameservers |
-| 🔎 DNS | All record types |
+| 🚨 Alerts | Only confirmed findings highlighted in red |
+| 🌍 WHOIS | Registrar, creation/expiry dates |
+| 🔎 DNS Records | All record types |
 | 🔍 Subdomains | Searchable table |
-| 🌐 Live Hosts | Status codes + page titles |
-| 🗺️ Endpoints | **Tabbed view** — In-Scope / API / All URLs |
-| 🔌 Ports | **Tabbed view** — Validated Services / Raw Observations |
+| 🌐 Live Hosts | Status codes + titles |
+| 🗺️ Endpoints | **Tabbed**: In-Scope / API / All URLs |
+| 🔌 Ports | **Tabbed**: Validated Services / Raw Observations |
 | 🧠 Technologies | Fingerprinted hosts |
-| 🔗 Takeover | Vulnerable subdomains highlighted in red |
+| 🔗 Takeover | Vulnerable subdomains in red |
 | 📸 Screenshots | Inline embedded images |
-| 📊 Scan Coverage | Full coverage metrics table |
+| 📊 Scan Coverage | Full metrics — what was tested |
 | 👤 Footer | Author credit on every report |
 
 ---
@@ -161,25 +185,32 @@ firefox output/example.com/vajra_report.html
 
 ```
 vajra/
-├── main.py                   # 9-stage pipeline entry point
-├── install.sh                # One-click dependency installer
-├── requirements.txt          # Python dependencies
-├── report_generator.py       # Professional HTML report generator
-├── recon_summary.py          # Markdown summary generator
-├── modules/
-│   ├── whois_recon.py        # WHOIS + Python fallback
-│   ├── dns_recon.py          # dig + socket fallback
-│   ├── subdomains.py         # Subfinder + Amass (parallel)
-│   ├── live_check.py         # httpx — 150 threads, 8s timeout
-│   ├── endpoints.py          # Katana + GAU + Wayback (parallel) + URL classification
-│   ├── ports.py              # Masscan + Naabu (parallel) + nmap validation
-│   ├── tech_detect.py        # WhatWeb fingerprinting
-│   ├── takeover_check.py     # 25 service fingerprints, 20 workers
-│   └── screenshot.py         # Alive verification (30 threads) + gowitness v2/v3
-└── core/
-    ├── banner.py             # Rich terminal UI
-    ├── utils.py              # Tool path resolver
-    └── setup_check.py        # Auto dependency installer
+├── main.py                    # 14-stage pipeline + resume + cache
+├── install.sh                 # One-click dependency installer
+├── requirements.txt           # Python dependencies
+├── report_generator.py        # Professional HTML report
+├── recon_summary.py           # Markdown summary
+├── core/
+│   ├── banner.py              # Rich UI + domain sanitization
+│   ├── cache.py               # Cache system (~/.vajra_cache)
+│   ├── resume.py              # Resume system (~/.vajra_resume)
+│   ├── utils.py               # Tool path resolver
+│   └── setup_check.py         # Auto dependency installer
+└── modules/
+    ├── whois_recon.py          # WHOIS + Python fallback
+    ├── dns_recon.py            # dig + socket fallback
+    ├── subdomains.py           # Subfinder + Amass parallel
+    ├── smart_scope.py          # High/Medium/Low classifier
+    ├── live_check.py           # httpx 150 threads
+    ├── ssl_analysis.py         # SSL/TLS pure Python
+    ├── endpoints.py            # Parallel + URL classification
+    ├── email_recon.py          # Email patterns + breach link
+    ├── google_dork.py          # 20 dork queries + HTML
+    ├── ports.py                # Masscan+Naabu parallel + nmap
+    ├── tech_detect.py          # WhatWeb
+    ├── nuclei_scan.py          # Nuclei templates
+    ├── takeover_check.py       # 25 fingerprints, 20 workers
+    └── screenshot.py           # 30-thread verify + gowitness
 ```
 
 ---
@@ -191,7 +222,7 @@ vajra/
 - **Permissions:** `sudo` required for `masscan`
 
 ### Auto-Installed Tools
-`subfinder` · `amass` · `httpx` · `naabu` · `masscan` · `whatweb` · `katana` · `gau` · `waybackurls` · `gowitness`
+`subfinder` · `amass` · `httpx` · `naabu` · `masscan` · `whatweb` · `katana` · `gau` · `waybackurls` · `nuclei` · `gowitness`
 
 ### Python Dependencies
 ```
@@ -203,47 +234,47 @@ pyfiglet >= 1.0.0
 
 ## 🛠️ Changelog
 
-<details>
-<summary><strong>v1.4.0 — Professional Report + Speed Optimizations</strong></summary>
+<details open>
+<summary><strong>v2.0.0 — Full Recon Suite (Current)</strong></summary>
 
 | Change | Detail |
 |--------|--------|
-| 🎯 URL Classification | Auto-sorts into In-Scope / API / Third-Party |
-| ✅ Service Validation | `nmap -sV` confirms actual services on found ports |
-| 📊 Coverage Table | Every report shows full scan coverage metrics |
-| ⚠️ Confidence Level | Medium/Low confidence clearly stated in every report |
-| 📋 Report Disclaimer | Clearly distinguishes recon from pentest |
-| 🗂️ Tabbed Report | Endpoints and Ports have tabbed views |
-| ⚡ Parallel Endpoints | Katana + GAU + Wayback run simultaneously |
-| ⚡ Parallel Ports | Masscan + Naabu run simultaneously |
-| ⚡ httpx 150 threads | Balanced speed with 8s timeout |
-| ⚡ Takeover 20 workers | Parallel subdomain takeover checking |
-| ⚡ Screenshot 30 threads | Parallel alive URL verification |
+| 💾 Cache System | Results cached — rescan skips unchanged stages instantly |
+| 🔄 Resume Scan | Ctrl+C and resume from exact stage — no data lost |
+| 🎯 Smart Scope | Auto High/Medium/Low priority classification |
+| 🔐 SSL/TLS | Cert expiry, weak ciphers, TLS version — pure Python |
+| 📧 Email Recon | Email patterns from endpoints + WHOIS + breach link |
+| 🕵️ Google Dorks | 20 targeted queries + clickable HTML file |
+| 🔴 Nuclei | 1000+ CVE/misconfiguration templates |
+| ⚡ Parallel | Every slow stage now runs simultaneously |
+| 🐛 Port stripping | `sub.example.com:8080` → `sub.example.com` fixed |
+| ✅ 16 tests | Automated test suite passes before every release |
+
+</details>
+
+<details>
+<summary><strong>v1.4.0 — Professional Report + Speed</strong></summary>
+
+- URL classification: In-Scope / API / Third-Party
+- Service validation with nmap -sV
+- Tabbed HTML report sections
+- Coverage table in every report
 
 </details>
 
 <details>
 <summary><strong>v1.3.0 — Takeover + Screenshots</strong></summary>
 
-- Subdomain takeover check (25 service fingerprints)
-- Smart screenshots — alive-verified, supports gowitness v2/v3
-- WHOIS and DNS modules added
-
-</details>
-
-<details>
-<summary><strong>v1.2.0 — Stability</strong></summary>
-
-- Auto HTML + Markdown reports after every scan
-- gau timeout fixed, ports empty-host crash fixed
-- whatweb flag syntax fixed
+- Subdomain takeover check (25 fingerprints)
+- Smart screenshots with alive verification
+- gowitness v2 + v3 support
 
 </details>
 
 <details>
 <summary><strong>v1.0.0 — Initial Release</strong></summary>
 
-- 5-stage pipeline with self-healing installer
+- 5-stage pipeline, self-healing installer
 
 </details>
 
@@ -253,11 +284,11 @@ pyfiglet >= 1.0.0
 
 > **VAJRA is designed for authorized security testing only.**
 >
-> Only use VAJRA against domains and systems you **own** or have **explicit written permission** to test. Unauthorized use against systems you do not have permission to test is **illegal** and **unethical**.
+> Only use VAJRA against domains you **own** or have **explicit written permission** to test.
+> Unauthorized use is **illegal** and **unethical**.
 >
-> The author is not responsible for any misuse or damage caused by this tool.
->
-> VAJRA generates **reconnaissance reports** — not penetration test reports. All findings require authorized human validation before being classified as security vulnerabilities.
+> VAJRA generates **attack surface reconnaissance reports** — not penetration test reports.
+> All findings require authorized human validation.
 
 ---
 
@@ -265,7 +296,7 @@ pyfiglet >= 1.0.0
 
 **⚡ Built for the security community — Use responsibly ⚡**
 
-*If VAJRA helps your work, give it a ⭐ on GitHub!*
+*If VAJRA helps your work, give it a ⭐*
 
 <br>
 
