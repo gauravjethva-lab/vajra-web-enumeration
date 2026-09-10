@@ -4,28 +4,41 @@ from core.utils import require_tool
 
 
 def clean_hosts(input_file, clean_file):
+    """Extract clean hostnames from live_subdomains.txt (httpx format)."""
     hosts = set()
     if not os.path.exists(input_file):
         return 0
-    with open(input_file) as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            # Handle httpx format: "https://host [200] [Title]"
-            # Take only the URL part (before first space)
-            url = line.split()[0] if line.split() else line
-            # Strip scheme
-            url = url.replace("https://", "").replace("http://", "")
-            # Strip path
-            url = url.split("/")[0]
-            # Strip port
-            url = url.split(":")[0]
-            if url:
-                hosts.add(url)
-    with open(clean_file, "w") as f:
-        for host in sorted(hosts):
-            f.write(host + "\n")
+    try:
+        with open(input_file) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                # httpx format: "https://host [200] [Title]"
+                # Take first token only (the URL)
+                url = line.split()[0] if line.split() else line
+                # Strip scheme
+                url = url.replace("https://", "").replace("http://", "")
+                # Strip path
+                url = url.split("/")[0]
+                # Strip port
+                url = url.split(":")[0]
+                # Strip any leftover brackets
+                url = url.strip("[]")
+                if url and "." in url:
+                    hosts.add(url)
+    except Exception as e:
+        print(f"[-] Error reading input file: {e}")
+        return 0
+
+    try:
+        with open(clean_file, "w") as f:
+            for host in sorted(hosts):
+                f.write(host + "\n")
+    except Exception as e:
+        print(f"[-] Error writing clean hosts: {e}")
+        return 0
+
     return len(hosts)
 
 
@@ -39,9 +52,13 @@ def scan_ports(domain):
     print("\n[+] Preparing Hosts For Port Scanning...")
 
     count = clean_hosts(input_file, clean_hosts_file)
+
     if count == 0:
         print("[-] No hosts to scan.")
-        open(final_output, "w").close()
+        try:
+            open(final_output, "w").close()
+        except Exception:
+            pass
         return
 
     print(f"[+] Scanning {count} hosts...")
@@ -60,6 +77,8 @@ def scan_ports(domain):
             )
         except subprocess.TimeoutExpired:
             print("[!] Masscan timed out.")
+        except Exception as e:
+            print(f"[-] Masscan error: {e}")
 
     if naabu_bin:
         print("[+] Running Naabu...")
@@ -71,30 +90,42 @@ def scan_ports(domain):
             )
         except subprocess.TimeoutExpired:
             print("[!] Naabu timed out.")
+        except Exception as e:
+            print(f"[-] Naabu error: {e}")
 
     combined = set()
+
     if os.path.exists(naabu_output):
-        with open(naabu_output) as f:
-            for line in f:
-                line = line.strip()
-                if line:
-                    combined.add(line)
+        try:
+            with open(naabu_output) as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        combined.add(line)
+        except Exception:
+            pass
 
     if os.path.exists(masscan_output):
-        with open(masscan_output) as f:
-            for line in f:
-                if "open" in line:
-                    parts = line.split()
-                    try:
-                        port = parts[2].split("/")[0]
-                        host = parts[3]
-                        combined.add(f"{host}:{port}")
-                    except IndexError:
-                        pass
+        try:
+            with open(masscan_output) as f:
+                for line in f:
+                    if "open" in line:
+                        parts = line.split()
+                        try:
+                            port = parts[2].split("/")[0]
+                            host = parts[3]
+                            combined.add(f"{host}:{port}")
+                        except (IndexError, ValueError):
+                            pass
+        except Exception:
+            pass
 
-    with open(final_output, "w") as f:
-        for item in sorted(combined):
-            f.write(item + "\n")
+    try:
+        with open(final_output, "w") as f:
+            for item in sorted(combined):
+                f.write(item + "\n")
+    except Exception as e:
+        print(f"[-] Error saving ports: {e}")
 
     print(f"[+] Open ports found: {len(combined)}")
     print(f"[+] Saved → {final_output}")
