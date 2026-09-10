@@ -1,4 +1,5 @@
 import subprocess
+import os
 from core.utils import require_tool
 
 
@@ -8,8 +9,14 @@ def detect_technologies(domain):
 
     print("\n[+] Detecting Technologies...")
 
+    if not os.path.exists(input_file):
+        print(f"[-] Input file not found: {input_file}")
+        open(output_file, "w").close()
+        return
+
     whatweb_bin = require_tool("whatweb")
     if not whatweb_bin:
+        open(output_file, "w").close()
         return
 
     command = (
@@ -24,5 +31,16 @@ def detect_technologies(domain):
         subprocess.run(command, shell=True, timeout=300)
     except subprocess.TimeoutExpired:
         print("[!] WhatWeb timed out — using partial results.")
+    except Exception as e:
+        print(f"[-] WhatWeb error: {e}")
 
-    print(f"[+] Technology results saved to {output_file}")
+    count = 0
+    if os.path.exists(output_file):
+        try:
+            with open(output_file) as f:
+                count = sum(1 for l in f if l.strip())
+        except Exception:
+            pass
+
+    print(f"[+] Technologies detected: {count} hosts")
+    print(f"[+] Saved → {output_file}")
