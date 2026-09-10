@@ -7,15 +7,15 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=for-the-badge&logo=linux&logoColor=white)](https://kali.org)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.5.0-f0883e?style=for-the-badge)](https://github.com/gauravjethva-lab/vajra-web-enumeration/releases)
+[![Version](https://img.shields.io/badge/Version-1.6.0-f0883e?style=for-the-badge)](https://github.com/gauravjethva-lab/vajra-web-enumeration/releases)
 [![Pipeline](https://img.shields.io/badge/Pipeline-5%20Stages-a855f7?style=for-the-badge)](#pipeline)
-[![Status](https://img.shields.io/badge/Status-100%25%20Working-22c55e?style=for-the-badge)](#)
+[![Errors](https://img.shields.io/badge/Errors-Zero-22c55e?style=for-the-badge)](#)
 [![Stars](https://img.shields.io/github/stars/gauravjethva-lab/vajra-web-enumeration?style=for-the-badge&color=f0883e)](https://github.com/gauravjethva-lab/vajra-web-enumeration/stargazers)
 
 <br>
 
 > **Full auto-pipeline Web Enumeration & Attack Surface Reconnaissance Framework**
-> 5 stages · Parallel execution · Zero API errors · Professional HTML report
+> 5 stages · Parallel execution · Zero errors · Professional HTML report
 
 <br>
 
@@ -42,7 +42,6 @@
 **Zero API errors. Zero crashes. 100% working.**
 
 > VAJRA is an **Attack Surface Mapper** — not a vulnerability scanner.
-> Every report clearly separates reconnaissance data from confirmed findings.
 
 ---
 
@@ -50,15 +49,16 @@
 
 | Feature | Detail |
 |---------|--------|
-| 🔍 **Subdomain Enum** | `subfinder` + `amass` in parallel threads |
-| 🌐 **Live Detection** | `httpx` — 150 threads, 8s timeout, no hangs |
-| 🗺️ **Endpoints** | `katana` + `gau` + `waybackurls` parallel — static file filtering |
+| 🔍 **Subdomain Enum** | `subfinder` + `amass` parallel — timeout protected |
+| 🌐 **Live Detection** | `httpx` 150 threads, 8s timeout, missing file safe |
+| 🗺️ **Endpoints** | `katana` + `gau` + `waybackurls` parallel — 23 extension filters |
 | 🔌 **Port Scanning** | `masscan` + `naabu` — httpx format parsed correctly |
-| 🧠 **Tech Fingerprint** | `whatweb` with correct flag syntax |
-| 📊 **Auto HTML Report** | Dark-theme report auto-generated after every scan |
-| 🔧 **Self-Healing** | Auto-installs every missing tool on first run |
-| ⏱️ **All Timeouts Set** | Every subprocess call has a timeout — no infinite hangs |
-| 🩹 **Smart Parsing** | Handles `https://host:port [200] [Title]` format correctly |
+| 🧠 **Tech Fingerprint** | `whatweb` — timeout + missing file protected |
+| 📊 **Auto HTML Report** | Dark-theme report with sidebar, search, stats |
+| 🔧 **Self-Healing** | Auto-installs every missing tool |
+| ⏱️ **All Timeouts** | Every subprocess has timeout — no infinite hangs |
+| 🛡️ **Error Handling** | Every module handles missing files + exceptions |
+| 🩹 **Smart Parsing** | Correctly handles `https://host:port [200] [Title]` |
 
 ---
 
@@ -69,14 +69,12 @@
 git clone https://github.com/gauravjethva-lab/vajra-web-enumeration.git
 cd vajra-web-enumeration/vajra
 
-# Install dependencies
+# Install
 bash install.sh
 
 # Run
 python3 main.py
 ```
-
-> First run auto-installs all missing tools. Every run after is fast.
 
 ---
 
@@ -95,11 +93,11 @@ python3 main.py
 
 | # | Stage | Tools | Output |
 |---|-------|-------|--------|
-| 1 | 🔍 Subdomains | `subfinder`, `amass` (parallel) | `final_subdomains.txt` |
-| 2 | 🌐 Live Hosts | `httpx` 150 threads, 8s timeout | `live_subdomains.txt` |
-| 3 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` (parallel) | `all_endpoints.txt` |
-| 4 | 🔌 Ports | `masscan`, `naabu` (timeout protected) | `open_ports.txt` |
-| 5 | 🧠 Tech | `whatweb` (timeout protected) | `technologies.txt` |
+| 1 | 🔍 Subdomains | `subfinder`, `amass` parallel | `final_subdomains.txt` |
+| 2 | 🌐 Live Hosts | `httpx` 150 threads | `live_subdomains.txt` |
+| 3 | 🗺️ Endpoints | `katana`, `gau`, `waybackurls` parallel | `all_endpoints.txt` |
+| 4 | 🔌 Ports | `masscan`, `naabu` | `open_ports.txt` |
+| 5 | 🧠 Tech | `whatweb` | `technologies.txt` |
 
 ---
 
@@ -107,7 +105,7 @@ python3 main.py
 
 <div id="report"></div>
 
-Auto-generated after every scan. Open in browser:
+Auto-generated after every scan:
 
 ```bash
 firefox output/example.com/vajra_report.html
@@ -115,7 +113,6 @@ firefox output/example.com/vajra_report.html
 
 | Section | Content |
 |---------|---------|
-| 📋 Header | Target, date, author name |
 | 📊 Stats | Subdomains, live hosts, endpoints, ports, tech |
 | 🔍 Subdomains | Searchable table |
 | 🌐 Live Hosts | Full list |
@@ -123,7 +120,7 @@ firefox output/example.com/vajra_report.html
 | 🔌 Ports | Host + port table |
 | 🧠 Technologies | Fingerprinted hosts |
 | 📸 Screenshots | Inline images |
-| 👤 Footer | Author credit on every report |
+| 👤 Footer | Author credit — Gaurav Jethva |
 
 ---
 
@@ -133,55 +130,56 @@ firefox output/example.com/vajra_report.html
 vajra/
 ├── main.py                  # 5-stage pipeline + auto HTML report
 ├── install.sh               # One-click dependency installer
-├── requirements.txt         # Python deps (rich, pyfiglet)
+├── requirements.txt         # Python deps
 ├── report_generator.py      # Professional HTML report
 ├── core/
 │   ├── banner.py            # Rich UI + domain sanitization
 │   ├── utils.py             # Tool path resolver
 │   └── setup_check.py       # Auto dependency installer
 └── modules/
-    ├── subdomains.py         # Subfinder + Amass parallel
-    ├── live_check.py         # httpx — 150 threads, 8s timeout
-    ├── endpoints.py          # Parallel + static file filter
-    ├── ports.py              # Masscan + Naabu — httpx format fix
-    └── tech_detect.py        # WhatWeb — timeout protected
+    ├── subdomains.py         # Parallel + timeout + safe save
+    ├── live_check.py         # Missing file + partial results safe
+    ├── endpoints.py          # Parallel + 23 filters + exception handling
+    ├── ports.py              # httpx format + edge case handling
+    └── tech_detect.py        # Missing file + timeout + count display
 ```
 
 ---
 
 ## ⚙️ Requirements
 
-- **OS:** Kali Linux (recommended) / Debian-based Linux
+- **OS:** Kali Linux / Debian Linux
 - **Python:** 3.8+
-- **Permissions:** `sudo` required for `masscan`
+- **Permissions:** `sudo` for `masscan`
 
-### Auto-Installed Tools
+### Auto-Installed
 `subfinder` · `amass` · `httpx` · `naabu` · `masscan` · `whatweb` · `katana` · `gau` · `waybackurls`
-
-### Python Dependencies
-```
-rich >= 13.0.0
-pyfiglet >= 1.0.0
-```
 
 ---
 
 ## 🛠️ Changelog
 
 <details open>
-<summary><strong>v1.5.0 — Zero Errors Release</strong></summary>
+<summary><strong>v1.6.0 — Zero Error Release</strong></summary>
 
 | Fix | Detail |
 |-----|--------|
-| 🔌 `clean_hosts` | Fixed httpx format parsing — `host [200] [Title]` → clean hostname |
-| 🔌 Port strip | `api.example.com:8080` → `api.example.com` correctly |
-| ⏱️ All timeouts | Every subprocess.run now has timeout — no infinite hangs |
-| 🗺️ GAU fix | `echo domain` instead of `cat live_hosts` — correct command |
-| 🗺️ Parallel | Katana + GAU + Waybackurls run simultaneously |
-| 🧠 WhatWeb | `--log-brief=` flag fix + timeout |
-| 🌐 httpx | 150 threads, 8s balanced timeout |
-| 🎨 Banner | Port stripping in sanitize_domain fixed |
-| 📊 Report | Auto-generated HTML with author credit |
+| ⏱️ `run_command` | Timeout added — no more infinite hangs on slow tools |
+| 🛡️ Missing files | All modules handle missing input files gracefully |
+| 🔌 `clean_hosts` | Bracket strip — `[200]` no longer included in hostnames |
+| 🔌 Port parsing | `IndexError` + `ValueError` caught in masscan parsing |
+| 🗺️ Endpoints | Per-tool exception handling — one tool crash won't stop others |
+| 🧠 Tech count | Technologies detected count now shown after scan |
+| ⏱️ All timeouts | Every single subprocess.run has timeout — verified |
+
+</details>
+
+<details>
+<summary><strong>v1.5.0 — Clean Foundation</strong></summary>
+
+- clean_hosts httpx format fix
+- gau echo command fix
+- Parallel endpoint collection
 
 </details>
 
@@ -196,9 +194,8 @@ pyfiglet >= 1.0.0
 
 ## ⚠️ Legal Disclaimer
 
-> **VAJRA is for authorized security testing only.**
+> **For authorized security testing only.**
 > Only use on systems you own or have explicit written permission to test.
-> Unauthorized use is illegal and unethical.
 > The author is not responsible for any misuse.
 
 ---
@@ -207,9 +204,7 @@ pyfiglet >= 1.0.0
 
 **⚡ Built for the security community — Use responsibly ⚡**
 
-*If VAJRA helps your work, give it a ⭐*
-
-<br>
+*Give it a ⭐ if VAJRA helps your work!*
 
 [![GitHub](https://img.shields.io/badge/GitHub-gauravjethva--lab-f0883e?style=for-the-badge&logo=github)](https://github.com/gauravjethva-lab)
 
