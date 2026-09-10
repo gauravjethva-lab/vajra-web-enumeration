@@ -68,9 +68,10 @@ def _run(cmd, quiet=True):
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
+                timeout=120,
             )
         else:
-            subprocess.run(cmd, shell=True, check=True)
+            subprocess.run(cmd, shell=True, check=True, timeout=120)
 
         return True
 
