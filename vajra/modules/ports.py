@@ -2,6 +2,7 @@ import subprocess
 import os
 from core.utils import require_tool
 
+
 def clean_hosts(input_file, clean_file):
     hosts = set()
     if not os.path.exists(input_file):
@@ -9,13 +10,24 @@ def clean_hosts(input_file, clean_file):
     with open(input_file) as f:
         for line in f:
             line = line.strip()
-            if not line: continue
-            line = line.replace("https://","").replace("http://","")
-            line = line.split("/")[0].split(":")[0]
-            if line: hosts.add(line)
+            if not line:
+                continue
+            # Handle httpx format: "https://host [200] [Title]"
+            # Take only the URL part (before first space)
+            url = line.split()[0] if line.split() else line
+            # Strip scheme
+            url = url.replace("https://", "").replace("http://", "")
+            # Strip path
+            url = url.split("/")[0]
+            # Strip port
+            url = url.split(":")[0]
+            if url:
+                hosts.add(url)
     with open(clean_file, "w") as f:
-        for host in sorted(hosts): f.write(host + "\n")
+        for host in sorted(hosts):
+            f.write(host + "\n")
     return len(hosts)
+
 
 def scan_ports(domain):
     input_file       = f"output/{domain}/live_subdomains.txt"
@@ -25,6 +37,7 @@ def scan_ports(domain):
     final_output     = f"output/{domain}/open_ports.txt"
 
     print("\n[+] Preparing Hosts For Port Scanning...")
+
     count = clean_hosts(input_file, clean_hosts_file)
     if count == 0:
         print("[-] No hosts to scan.")
@@ -32,6 +45,7 @@ def scan_ports(domain):
         return
 
     print(f"[+] Scanning {count} hosts...")
+
     masscan_bin = require_tool("masscan")
     naabu_bin   = require_tool("naabu")
 
@@ -40,8 +54,10 @@ def scan_ports(domain):
         sudo = "" if os.geteuid() == 0 else "sudo "
         try:
             subprocess.run(
-                f"{sudo}{masscan_bin} -p1-1000 --rate 1000 -iL {clean_hosts_file} -oL {masscan_output} > /dev/null 2>&1",
-                shell=True, timeout=300)
+                f"{sudo}{masscan_bin} -p1-1000 --rate 1000 "
+                f"-iL {clean_hosts_file} -oL {masscan_output} > /dev/null 2>&1",
+                shell=True, timeout=300
+            )
         except subprocess.TimeoutExpired:
             print("[!] Masscan timed out.")
 
@@ -49,8 +65,10 @@ def scan_ports(domain):
         print("[+] Running Naabu...")
         try:
             subprocess.run(
-                f"cat {clean_hosts_file} | {naabu_bin} -top-ports 1000 -silent -o {naabu_output} > /dev/null 2>&1",
-                shell=True, timeout=300)
+                f"cat {clean_hosts_file} | {naabu_bin} -top-ports 1000 "
+                f"-silent -o {naabu_output} > /dev/null 2>&1",
+                shell=True, timeout=300
+            )
         except subprocess.TimeoutExpired:
             print("[!] Naabu timed out.")
 
@@ -59,7 +77,8 @@ def scan_ports(domain):
         with open(naabu_output) as f:
             for line in f:
                 line = line.strip()
-                if line: combined.add(line)
+                if line:
+                    combined.add(line)
 
     if os.path.exists(masscan_output):
         with open(masscan_output) as f:
@@ -70,10 +89,12 @@ def scan_ports(domain):
                         port = parts[2].split("/")[0]
                         host = parts[3]
                         combined.add(f"{host}:{port}")
-                    except IndexError: pass
+                    except IndexError:
+                        pass
 
     with open(final_output, "w") as f:
-        for item in sorted(combined): f.write(item + "\n")
+        for item in sorted(combined):
+            f.write(item + "\n")
 
     print(f"[+] Open ports found: {len(combined)}")
     print(f"[+] Saved → {final_output}")
