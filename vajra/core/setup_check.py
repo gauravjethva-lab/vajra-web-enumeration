@@ -42,6 +42,7 @@ GO_TOOLS = {
     "gau": "github.com/lc/gau/v2/cmd/gau",
     "waybackurls": "github.com/tomnomnom/waybackurls",
     "amass": "github.com/owasp-amass/amass/v4/...",
+    "nuclei": "github.com/projectdiscovery/nuclei/v3/cmd/nuclei",
 }
 
 PYTHON_PACKAGES = ["rich", "pyfiglet"]
